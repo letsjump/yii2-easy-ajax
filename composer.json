@@ -17,5 +17,10 @@
         "psr-4": {
             "letsjump\\easyAjax\\": ""
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "letsjump\\easyAjax\\": ""
+        }
     }
 }
