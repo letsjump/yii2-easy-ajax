@@ -2,23 +2,18 @@
     "name": "letsjump/yii2-easy-ajax",
     "description": "An easy way to do things with Ajax",
     "type": "yii2-extension",
-    "keywords": ["yii2","ajax","automation","speedup coding"],
     "license": "Apache-2.0",
     "authors": [
         {
-            "name": "letsjump",
+            "name": "Gianpaolo Scrigna",
             "email": "letsjump@gmail.com"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "yiisoft/yii2": "~2.0.0"
     },
     "autoload": {
-        "psr-4": {
-            "letsjump\\easyAjax\\": ""
-        }
-    },
-    "autoload-dev": {
         "psr-4": {
             "letsjump\\easyAjax\\": ""
         }

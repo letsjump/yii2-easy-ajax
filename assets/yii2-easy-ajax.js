@@ -1,23 +1,26 @@
-var originalModal = jQuery('#systemModal').clone();
+/** @var modal Bootstrap modal */
+var modal = jQuery('#systemModal');
+
+/** @var originalModal Original modal needed in case of reset */
+var originalModal = modal.clone();
+
 
 (function ($) {
     $.fn.resetModal = function () {
         $(this).remove();
         var myClone = originalModal.clone();
-        $('body').append(myClone);
+        jQuery('body').append(myClone);
     };
 })(jQuery);
 
-var modal = jQuery('#systemModal');
-
-var ajaxResponse = function(data) {
+var ajaxResponse = function (data) {
     if (data && typeof data !== 'undefined') {
-        // create modals
-        //var modal = jQuery('#systemModal');
+
+        /** Modal management */
         if (data.modal && data.modal !== 'undefined' && data.modal !== 'close') {
             modal.resetModal();
             jQuery('.modal-backdrop').remove();
-            modal = jQuery('#systemModal');
+            // modal = jQuery('#systemModal');
             // modal.removeData('modal');
             if (typeof data.modal.title !== 'undefined') {
                 modal.find('.modal-header h4').html(data.modal.title);
@@ -85,7 +88,7 @@ var ajaxResponse = function(data) {
                 }
                 //Add timeout if not exist in the container object
                 if (!('timeout' in data.pjaxReload[index])) {
-                    data.pjaxReload[index].timeout = $(data.pjaxReload[index].container).attr('data-pjax-timeout');
+                    data.pjaxReload[index].timeout = jQuery(data.pjaxReload[index].container).attr('data-pjax-timeout');
                 }
                 //Removes elements to reload passed from the controller that not exist in page avoid javascript error in console
                 //Happen when same controller is used in different page and so need to reload different elements in different pages
@@ -109,7 +112,7 @@ var ajaxResponse = function(data) {
         //Reload active modal tab and delete cache of specified tabs
         if (data.tabsReload && typeof data.tabsReload !== 'undefined') {
             modal.find('.tabs-krajee').tabsX('flushCache', data.tabsReload);
-            $(modal).find('li.active a').trigger('click');
+            jQuery(modal).find('li.active a').trigger('click');
         }
 
         // multiple form validation
@@ -150,8 +153,47 @@ var ajaxResponse = function(data) {
             if (modal.find('[autofocus]').not(":focus")) {
                 setTimeout(function () {
                     modal.find('[autofocus]').focus();
-                }, 2000);
+                }, 200);
             }
         });
     }
 }
+
+jQuery(document).ready(function () {
+
+    jQuery(document).on('click', '.open-modal, [data-ajax="1"]', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        var attribute = jQuery(this)[0].hasAttribute("data-href") ? 'data-href' : 'href';
+        jQuery.get(jQuery(this).attr(attribute), function (data) {
+            ajaxResponse(data);
+        });
+    });
+
+    $(document)
+        .keypress(function (e) {
+            if (e.which === 13 && ($("#systemModal").data('bs.modal') || {}).isShown && !$("textarea").is(":focus")) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                $('#modalform-submit').click();
+            }
+        })
+        .on('click', '#modalform-submit', function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            var form = jQuery(ajaxFormId);
+            var data = form.serializeArray();
+            data.push({name: 'save', value: true});
+            $.ajax({
+                type:    form.attr('method'),
+                url:     form.attr('action'),
+                data:    data,
+                success: function (data) {
+                    ajaxResponse(data);
+                    if (data.success === true) {
+                        $("[data-dismiss=modal]").trigger({type: "click"});
+                    }
+                }
+            });
+        });
+});
