@@ -9,9 +9,11 @@
 namespace letsjump\easyAjax;
 
 
+use letsjump\easyAjax\web\AnimateAsset;
 use letsjump\easyAjax\web\EasyAjaxAsset;
+use letsjump\easyAjax\web\NotifyAsset;
 use yii\bootstrap\Modal;
-use yii\jui\Widget;
+use yii\bootstrap\Widget;
 use yii\web\View;
 
 class EasyAjax extends Widget
@@ -36,10 +38,10 @@ class EasyAjax extends Widget
     /**
      * Growls
      */
-    const GROWL = 'yea_growl';
-    const GROWL_TYPE = 'type';
-    const GROWL_ICON = 'icon';
-    const GROWL_TITLE = 'title';
+    const NOTIFY = 'yea_notify';
+    const NOTIFY_TYPE = 'type';
+    const NOTIFY_ICON = 'icon';
+    const NOTIFY_TITLE = 'title';
     
     /*
      * Redirects
@@ -75,6 +77,8 @@ class EasyAjax extends Widget
     {
         $this->getView()->registerJsVar('yea_modalid', $this->modal_id, View::POS_HEAD);
         EasyAjaxAsset::register($this->view);
+        AnimateAsset::register($this->view);
+        NotifyAsset::register($this->view);
         $this->renderModal();
         parent::init();
     }

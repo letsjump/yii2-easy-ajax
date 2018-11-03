@@ -9,13 +9,13 @@ use yii\web\AssetBundle;
  *
  * @since 0.1
  */
-class EasyAjaxAsset extends AssetBundle
+class NotifyAsset extends AssetBundle
 {
     
-    public $sourcePath = '@vendor/letsjump/yii2-easy-ajax/assets';
+    public $sourcePath = '@bower/remarkable-bootstrap-notify';
     
     public $js = [
-        'yii2-easy-ajax.js'
+        'bootstrap-notify.js'
     ];
     
     public $depends = [

@@ -68,9 +68,10 @@ var yiiEasyAjaxResponse = function (data) {
             jQuery(".phantom-content .close").trigger("click");
         }
 
-        // // adding growls to page
-        if (data.yea_growl && typeof data.yea_growl !== "undefined") {
-            jQuery.notify(data.yea_growl.title, data.yea_growl);
+        // // adding notifications growl style to page
+        if (data.yea_notify && typeof data.yea_notify !== "undefined") {
+            console.log(data.yea_notify);
+            jQuery.notify(data.yea_notify.options, data.yea_notify.settings);
         }
 
         if (typeof data.jsFunction !== "undefined") {
