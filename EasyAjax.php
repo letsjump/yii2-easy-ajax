@@ -8,32 +8,18 @@
 
 namespace letsjump\easyAjax;
 
-
+use letsjump\easyAjax\helpers\Notify;
 use letsjump\easyAjax\web\AnimateAsset;
 use letsjump\easyAjax\web\EasyAjaxAsset;
 use letsjump\easyAjax\web\NotifyAsset;
-use yii\bootstrap\Modal;
+use Yii;
 use yii\bootstrap\Widget;
+use yii\helpers\ArrayHelper;
 use yii\web\View;
 
 class EasyAjax extends Widget
 {
-    public $modal_id = "yea-modal";
-    
     const SUCCESS = 'yea_success';
-    
-    /**
-     * Modals
-     */
-    const MODAL = 'yea_modal';
-    const MODAL_TITLE = 'title';
-    const MODAL_HEADER = 'header';
-    const MODAL_OPTIONS = 'options';
-    const MODAL_CONTENT = 'body';
-    const MODAL_FOOTER = 'footer';
-    const MODAL_SIZE = 'size';
-    const MODAL_ADDCSSCLASS = 'addClass';
-    const MODAL_CLOSE = 'close';
     
     /**
      * Growls
@@ -73,32 +59,198 @@ class EasyAjax extends Widget
     const CONFIRM_MESSAGE = 'message';
     const CONFIRM_URL = 'url';
     
+    public $modal_id = "yea-modal";
+    
+    public $publishNotifyAsset = true;
+    
+    public $publishAnimateAsset = true;
+    
+    public $renderModal = true;
+    
+    protected $_defaultSettings = [
+        'viewPath' => '@vendor/letsjump/yii2-easy-ajax/views',
+        'modal'    => [
+            'viewFile' => '_modal_default',
+            'modal_id' => 'yea-modal',
+        ],
+        'notify' => [
+            'viewFile'       => '_notify_default',
+            'iconSuccess'    => 'glyphicon glyphicon-ok-circle',
+            'iconInfo'       => 'glyphicon glyphicon-info-sign',
+            'iconWarning'    => 'glyphicon glyphicon-warning-sign',
+            'iconDanger'     => 'glyphicon glyphicon-exclamation-sign',
+            'clientSettings' => [
+                'element'         => 'body',
+                'position'        => null,
+                'type'            => 'info',
+                'allow_dismiss'   => true,
+                'newest_on_top'   => false,
+                'showProgressbar' => false,
+                'placement'       => [
+                    'from'  => 'top',
+                    'align' => 'right'
+                ],
+                'offset'          => 20,
+                'spacing'         => 10,
+                'z_index'         => 1031,
+                'delay'           => 5000,
+                'timer'           => 1000,
+                'url_target'      => '_blank',
+                'mouse_over'      => null,
+                'animate'         => [
+                    'enter' => 'animated fadeInDown',
+                    'exit'  => 'animated fadeOutUp',
+                ],
+                'onShow'          => null,
+                'onShown'         => null,
+                'onClose'         => null,
+                'onClosed'        => null,
+                'iconType'        => 'class'
+            ]
+        ]
+    ];
+    
+    /**
+     * Modals
+     */
+    const MODAL = 'yea_modal';
+    const MODAL_TITLE = 'title';
+    const MODAL_HEADER = 'header';
+    const MODAL_OPTIONS = 'options';
+    const MODAL_CONTENT = 'body';
+    const MODAL_FOOTER = 'footer';
+    const MODAL_SIZE = 'size';
+    const MODAL_ADDCSSCLASS = 'addClass';
+    const MODAL_CLOSE = 'close';
+    
     public function init()
     {
-        $this->getView()->registerJsVar('yea_modalid', $this->modal_id, View::POS_HEAD);
-        EasyAjaxAsset::register($this->view);
-        AnimateAsset::register($this->view);
-        NotifyAsset::register($this->view);
-        $this->renderModal();
+        $view = $this->getView();
+        $view->registerJsVar('yea_modalid', $this->modal_id, View::POS_HEAD);
+        
+        // registering assets
+        EasyAjaxAsset::register($view);
+        
+        if ($this->publishAnimateAsset == true) {
+            AnimateAsset::register($view);
+        }
+        
+        if ($this->publishNotifyAsset == true) {
+            NotifyAsset::register($view);
+        }
+        
         parent::init();
     }
     
-    /**
-     *
-     */
-    protected function renderModal()
+    public function getSettings()
     {
-        Modal::begin([
-            'header'  => '<h4 class="modal-title">Title</h4>',
-            'footer'  => '',
-            'id'      => $this->modal_id,
-            'size'    => Modal::SIZE_DEFAULT,
-            'options' => [
-                'tabindex' => false, // important for Select2 to work properly
-//            'class' => 'phantomModal',
-            ],
-        ]);
-        echo "<div id='systemModalContent'></div>";
-        Modal::end();
+        return isset(Yii::$app->params['easyAjax'])
+            ? ArrayHelper::merge($this->_defaultSettings, Yii::$app->params['easyAjax'])
+            : $this->_defaultSettings;
+    }
+    
+    /**
+     * Render a Success Notify with default settings
+     *
+     * @param string $message
+     * @param null|string $title
+     * @param array $settings
+     *
+     * @return array
+     */
+    public static function notifySuccess($message, $title = null, $settings = [])
+    {
+        $settings['type'] = 'success';
+        $notify = new Notify();
+        return $notify->generate($message, $title, $notify->settings['notify']['iconSuccess'], null, null,
+            $settings);
+    }
+    
+    /**
+     * Render a Info Notify with default settings
+     *
+     * @param string $message
+     * @param null|string $title
+     * @param array $settings
+     *
+     * @return array
+     */
+    public static function notifyInfo($message, $title = null, $settings = [])
+    {
+        $settings['type'] = 'info';
+        $notify = new Notify();
+        return $notify->generate($message, $title, $notify->settings['notify']['iconInfo'], null, null,
+            $settings);
+    }
+    
+    /**
+     * Render a Warning Notify with default settings
+     *
+     * @param string $message
+     * @param null|string $title
+     * @param array $settings
+     *
+     * @return array
+     */
+    public static function notifyWarning($message, $title = null, $settings = [])
+    {
+        $settings['type'] = 'warning';
+        $notify = new Notify();
+        return (new Notify())->generate($message, $title, $notify->settings['notify']['iconWarning'], null, null,
+            $settings);
+    }
+    
+    /**
+     * Render a Danger Notify with default settings
+     *
+     * @param string $message
+     * @param null|string $title
+     * @param array $settings
+     *
+     * @return array
+     */
+    public static function notifyDanger($message, $title = null, $settings = [])
+    {
+        $settings['type'] = 'danger';
+        $notify = new Notify();
+        return (new Notify())->generate($message, $title, $notify->settings['notify']['iconDanger'], null, null,
+            $settings);
+    }
+    
+    /**
+     * Render a configurable Notify with default settings
+     *
+     * @param string $type
+     * @param string $message
+     * @param null|string $title
+     * @param null|string $icon
+     * @param null|string $url
+     * @param null|string $target
+     * @param array $settings
+     *
+     * @return array
+     */
+    public static function notify(
+        $type,
+        $message,
+        $title = null,
+        $icon = null,
+        $url = null,
+        $target = null,
+        $settings = []
+    ) {
+        $settings['type'] = $type;
+        
+        return (new Notify())->generate($message, $title, $icon, $url, $target, $settings);
+    }
+    
+    public function run()
+    {
+        // render modal
+        if ($this->renderModal == true) {
+            echo $this->render($this->settings['viewPath'] . DIRECTORY_SEPARATOR . $this->settings['modal']['viewFile'], ['widget' => $this]);
+        }
+        
+        parent::run();
     }
 }

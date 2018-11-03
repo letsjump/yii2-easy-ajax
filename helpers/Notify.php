@@ -9,11 +9,11 @@
 namespace letsjump\easyAjax\helpers;
 
 
-use yii\bootstrap\Widget;
+use letsjump\easyAjax\EasyAjax;
+use Yii;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Json;
 
-class Notify extends Widget
+class Notify extends EasyAjax
 {
     /**
      * Info type of the alert
@@ -31,63 +31,20 @@ class Notify extends Widget
      * Warning type of the alert
      */
     const TYPE_WARNING = 'warning';
-    /**
-     * @var array the alert types configuration for the flash messages.
-     * This array is setup as $key => $value, where:
-     * - $key is the name of the session flash variable
-     * - $value is the bootstrap alert type (i.e. danger, success, info, warning)
-     */
-    public $alertTypes = [
-        'error'   => self::TYPE_DANGER,
-        'danger'  => self::TYPE_DANGER,
-        'success' => self::TYPE_SUCCESS,
-        'info'    => self::TYPE_INFO,
-        'warning' => self::TYPE_WARNING,
-    ];
     
-    public $viewPath = '@vendor/letsjump/yii2-easy-ajax';
-    
-    private $_settings = [
-        'element'         => 'body',
-        'position'        => null,
-        'type'            => 'info',
-        'allow_dismiss'   => true,
-        'newest_on_top'   => false,
-        'showProgressbar' => false,
-        'placement'       => [
-            'from'  => 'top',
-            'align' => 'right'
-        ],
-        'offset'          => 20,
-        'spacing'         => 10,
-        'z_index'         => 1031,
-        'delay'           => 5000,
-        'timer'           => 1000,
-        'url_target'      => '_blank',
-        'mouse_over'      => null,
-        'animate'         => [
-            'enter' => 'animated fadeInDown',
-            'exit'  => 'animated fadeOutUp',
-        ],
-        'onShow'          => null,
-        'onShown'         => null,
-        'onClose'         => null,
-        'onClosed'        => null,
-        'iconType'        => 'class',
-        'template'        => null,
-    ];
+    public $settings = [];
     
     public function init()
     {
-        $this->_settings['template'] = $this->render($this->viewPath . '/views/_notify_default');
-        parent::init();
-    }
-    
-    public static function notifySuccess($message, $title = null, $settings = [])
-    {
-        $settings['type'] = 'success';
+        $this->settings = parent::getSettings();
         
-        return (new Notify())->generate($message, $title, $icon = 'glyphicon glyphicon-star', null, null, $settings);
+        if ( ! isset($this->settings['notify']['clientSettings']['template'])) {
+            $this->settings['notify']['clientSettings']['template'] = $this->render($this->settings['viewPath']
+                                                                                    . DIRECTORY_SEPARATOR
+                                                                                    . $this->settings['notify']['viewFile']);
+        }
+        
+        parent::init();
     }
     
     public function generate($message, $title, $icon = null, $url = null, $target = null, $settings = [])
@@ -106,6 +63,9 @@ class Notify extends Widget
             $options['target'] = $target;
         }
         
-        return ['options' => $options, 'settings' => ArrayHelper::merge($this->_settings, $settings)];
+        return [
+            'options'  => $options,
+            'settings' => ArrayHelper::merge($this->settings['notify']['clientSettings'], $settings)
+        ];
     }
 }
