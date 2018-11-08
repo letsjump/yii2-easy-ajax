@@ -10,33 +10,61 @@ namespace letsjump\easyAjax\helpers;
 
 
 use letsjump\easyAjax\EasyAjax;
-use yii\helpers\ArrayHelper;
 
 class Modal extends EasyAjax
 {
+    public $settings = [];
     
     public function init()
     {
-        $this->_settings['template'] = $this->render($this->viewPath . '/_notify_default');
+        $this->settings = parent::getSettings();
         parent::init();
     }
     
-    public function generate($message, $title, $icon = null, $url = null, $target = null, $settings = [])
+    /**
+     * Insert the default modal html code into the application layout
+     */
+    public function inject()
     {
-        $options = [
-            'message' => $message,
-            'title'   => $title,
-        ];
-        if ( ! empty($icon)) {
-            $options['icon'] = $icon;
-        }
-        if ( ! empty($url)) {
-            $options['url'] = $url;
-        }
-        if ( ! empty($target)) {
-            $options['target'] = $target;
+        echo $this->render($this->settings['viewPath'] . DIRECTORY_SEPARATOR . $this->settings['modal']['viewFile'],
+            ['widget' => $this]);
+    }
+    
+    /**
+     * @param string $title
+     * @param string $content
+     * @param \yii\base\Model[] $models
+     * @param string $size
+     * @param array $options
+     * @param string $footerView
+     *
+     * @return array
+     */
+    public function generate($content, $title, $models, $size, $options, $footerView)
+    {
+        
+        if ($footerView === false) {
+            $footer = '';
+        } else if ($footerView !== null && $footerView !== false) {
+            $footer = $this->view->render($this->settings['viewPath']
+                                          . DIRECTORY_SEPARATOR
+                                          . $footerView);
+        } else {
+            $footer = $this->view->render($this->settings['viewPath']
+                                          . DIRECTORY_SEPARATOR
+                                          . $this->settings['modal']['defaultViewFooter'], ['models'=>$models]);
         }
         
-        return ['options' => $options, 'settings' => ArrayHelper::merge($this->_settings, $settings)];
+        if($size == null) {
+            $size = \yii\bootstrap\Modal::SIZE_DEFAULT;
+        }
+        
+        return [
+            'title'   => $title,
+            'content' => $content,
+            'footer'  => $footer,
+            'size'    => $size,
+            'options' => $options,
+        ];
     }
 }

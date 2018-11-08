@@ -8,6 +8,7 @@
 
 namespace letsjump\easyAjax;
 
+use letsjump\easyAjax\helpers\Modal;
 use letsjump\easyAjax\helpers\Notify;
 use letsjump\easyAjax\web\AnimateAsset;
 use letsjump\easyAjax\web\EasyAjaxAsset;
@@ -72,6 +73,7 @@ class EasyAjax extends Widget
         'modal'    => [
             'viewFile' => '_modal_default',
             'modal_id' => 'yea-modal',
+            'defaultViewFooter' => '_modal_buttons'
         ],
         'notify' => [
             'viewFile'       => '_notify_default',
@@ -123,6 +125,9 @@ class EasyAjax extends Widget
     const MODAL_ADDCSSCLASS = 'addClass';
     const MODAL_CLOSE = 'close';
     
+    /**
+     *
+     */
     public function init()
     {
         $view = $this->getView();
@@ -142,11 +147,29 @@ class EasyAjax extends Widget
         parent::init();
     }
     
+    /**
+     * @return array
+     */
     public function getSettings()
     {
         return isset(Yii::$app->params['easyAjax'])
             ? ArrayHelper::merge($this->_defaultSettings, Yii::$app->params['easyAjax'])
             : $this->_defaultSettings;
+    }
+    
+    /**
+     * @param $title
+     * @param $content
+     * @param null $models
+     * @param null $size
+     * @param array $options
+     * @param null $footer
+     *
+     * @return array
+     */
+    public static function modal($content, $title = null, $models = null, $size = null, $options = [], $footer = null){
+        $modal = new Modal();
+        return $modal->generate($content, $title, $models, $size, $options, $footer);
     }
     
     /**
@@ -244,11 +267,14 @@ class EasyAjax extends Widget
         return (new Notify())->generate($message, $title, $icon, $url, $target, $settings);
     }
     
+    /**
+     * @return string|void
+     */
     public function run()
     {
         // render modal
         if ($this->renderModal == true) {
-            echo $this->render($this->settings['viewPath'] . DIRECTORY_SEPARATOR . $this->settings['modal']['viewFile'], ['widget' => $this]);
+            (new Modal())->inject();
         }
         
         parent::run();

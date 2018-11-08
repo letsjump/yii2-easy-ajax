@@ -25,8 +25,8 @@ var yiiEasyAjaxResponse = function (data) {
             if (typeof data.yea_modal.title !== "undefined") {
                 modal.find(".modal-header h4").html(data.yea_modal.title);
             }
-            if (typeof data.yea_modal.body !== "undefined") {
-                modal.find(".modal-body").html(data.yea_modal.body);
+            if (typeof data.yea_modal.content !== "undefined") {
+                modal.find(".modal-body").html(data.yea_modal.content);
             }
             //if exist phantomModal create all html required into the modal
             if (typeof data.yea_modal.options !== "undefined") {
@@ -82,6 +82,7 @@ var yiiEasyAjaxResponse = function (data) {
         // refer to: http://stackoverflow.com/questions/31985286/how-to-reload-multiple-pjax
         if (data.yea_pjax_reload && typeof data.yea_pjax_reload !== "undefined") {
             //Rebuild container_id  as object if necessary
+            // console.log('qui');
             jQuery.each(data.yea_pjax_reload, function (index, container) {
                 if (!jQuery.isPlainObject(container)) {
                     data.yea_pjax_reload[index] = {};
@@ -173,28 +174,31 @@ jQuery(document).ready(function () {
 
     $(document)
         .keypress(function (e) {
-            if (e.which === 13 && ($("#" + yea-modalid).data("bs.modal") || {}).isShown && !$("textarea").is(":focus")) {
+            if (e.which === 13 && ($("#" + yea - modalid).data("bs.modal") || {}).isShown && !$("textarea").is(":focus")) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 $("#modalform-submit").click();
             }
         })
-        .on("click", "#modalform-submit", function (e) {
+        .on("click", ".modalform-submit, #modalform-submit", function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            var form = $("#"+$(this).data("formid"));
-            var data = form.serializeArray();
-            data.push({name: "save", value: true});
-            $.ajax({
-                type:    form.attr("method"),
-                url:     form.attr("action"),
-                data:    data,
-                success: function (data) {
-                    yiiEasyAjaxResponse(data);
-                    if (data.yea_success === true) {
-                        $("[data-dismiss=modal]").trigger({type: "click"});
+            var forms = $(this).data("formid");
+            jQuery.each(forms, function (index, name) {
+                var form = $("#" + name);
+                var data = form.serializeArray();
+                data.push({name: "yea-save", value: true});
+                $.ajax({
+                    type:    form.attr("method"),
+                    url:     form.attr("action"),
+                    data:    data,
+                    success: function (data) {
+                        yiiEasyAjaxResponse(data);
+                        if (data.yea_success === true) {
+                            $("[data-dismiss=modal]").trigger({type: "click"});
+                        }
                     }
-                }
+                });
             });
         });
 });

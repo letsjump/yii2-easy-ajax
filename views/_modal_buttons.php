@@ -5,17 +5,20 @@ use yii\helpers\Html;
 use yii\helpers\StringHelper;
 
 /**
- * @var $model \common\components\ActiveRecord
- * @var $this  \yii\web\View
+ * @var $models \yii\base\Model
+ * @var $this   \yii\web\View
  *
- * Default buttons for Active Record based forms.
  */
-
-if (empty($formId)) {
-    $formId = strtolower(StringHelper::basename(get_class($model))) . '-form';
+$formId = [];
+if ( ! empty($models)) {
+    
+    if ( ! is_array($models)) {
+        $models = [$models];
+    }
+    foreach ($models as $model) {
+        $formId[] = strtolower(StringHelper::basename(get_class($model))) . '-form';
+    }
 }
-
-$this->registerJsVar('ajaxFormId', '#' . $formId);
 
 $buttons['cancel'] = Html::button(
     Yii::t('sys', 'Annulla'),
@@ -24,17 +27,21 @@ $buttons['cancel'] = Html::button(
         'data-dismiss' => 'modal'
     ]
 );
-if(
-    Helper::checkRoute('create')
-    || Helper::checkRoute('modal')
-    || Helper::checkRoute('update')
+
+if (
+    isset($models)
+    && (
+        Helper::checkRoute('create')
+        || Helper::checkRoute('modal')
+        || Helper::checkRoute('update')
+    )
 ) {
     $buttons['save'] = Html::submitButton(
-        $model->isNewRecord ? Yii::t('sys', 'Salva e aggiungi') : Yii::t('sys', 'Salva'),
+        $models[0]->isNewRecord ? Yii::t('sys', 'Add') : Yii::t('sys', 'Save'),
         [
-            'class' => 'btn btn-info pull-right',
-            'id'    => 'modalform-submit',
-            'data-formid' => $formId
+            'class'       => 'btn btn-info pull-right modalform-submit',
+//            'id'    => 'modalform-submit',
+            'data-formid' => ! empty($formId) ? \yii\helpers\Json::encode($formId) : null
         ]
     );
 }
