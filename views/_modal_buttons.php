@@ -3,6 +3,7 @@
 use mdm\admin\components\Helper;
 use yii\helpers\Html;
 use yii\helpers\StringHelper;
+use yii\helpers\Json;
 
 /**
  * @var $models \yii\base\Model
@@ -11,7 +12,6 @@ use yii\helpers\StringHelper;
  */
 $formId = [];
 if ( ! empty($models)) {
-    
     if ( ! is_array($models)) {
         $models = [$models];
     }
@@ -37,11 +37,10 @@ if (
     )
 ) {
     $buttons['save'] = Html::submitButton(
-        $models[0]->isNewRecord ? Yii::t('sys', 'Add') : Yii::t('sys', 'Save'),
+        $models[0]->isNewRecord ? Yii::t('app', 'Add') : Yii::t('app', 'Save'),
         [
             'class'       => 'btn btn-info pull-right modalform-submit',
-//            'id'    => 'modalform-submit',
-            'data-formid' => ! empty($formId) ? \yii\helpers\Json::encode($formId) : null
+            'data-formid' => ! empty($formId) ? Json::encode($formId) : null
         ]
     );
 }

@@ -71,11 +71,11 @@ class EasyAjax extends Widget
     protected $_defaultSettings = [
         'viewPath' => '@vendor/letsjump/yii2-easy-ajax/views',
         'modal'    => [
-            'viewFile' => '_modal_default',
-            'modal_id' => 'yea-modal',
+            'viewFile'          => '_modal_default',
+            'modal_id'          => 'yea-modal',
             'defaultViewFooter' => '_modal_buttons'
         ],
-        'notify' => [
+        'notify'   => [
             'viewFile'       => '_notify_default',
             'iconSuccess'    => 'glyphicon glyphicon-ok-circle',
             'iconInfo'       => 'glyphicon glyphicon-info-sign',
@@ -131,18 +131,23 @@ class EasyAjax extends Widget
     public function init()
     {
         $view = $this->getView();
+        
         $view->registerJsVar('yea_modalid', $this->modal_id, View::POS_HEAD);
+//        $view->registerJs('easyAjax.init("' . $this->modal_id . '")', View::POS_END);
         
         // registering assets
-        EasyAjaxAsset::register($view);
-        
-        if ($this->publishAnimateAsset == true) {
-            AnimateAsset::register($view);
+        if ( ! Yii::$app->request->isAjax) {
+            EasyAjaxAsset::register($view);
+            
+            if ($this->publishAnimateAsset == true) {
+                AnimateAsset::register($view);
+            }
+            
+            if ($this->publishNotifyAsset == true) {
+                NotifyAsset::register($view);
+            }
         }
         
-        if ($this->publishNotifyAsset == true) {
-            NotifyAsset::register($view);
-        }
         
         parent::init();
     }
@@ -158,6 +163,57 @@ class EasyAjax extends Widget
     }
     
     /**
+     * @param string $message
+     * @param string $url
+     *
+     * @return array
+     */
+    public static function confirm($message, $url)
+    {
+        return ['message' => $message, 'url' => $url];
+    }
+    
+    /**
+     * @param string $url
+     *
+     * @return string
+     */
+    public static function redirectAjax($url)
+    {
+        return $url;
+    }
+    
+    /**
+     * @param string $url
+     *
+     * @return string
+     */
+    public static function redirectJavascript($url)
+    {
+        return $url;
+    }
+    
+    /**
+     * @param array $array [['#tagID'=>'content to be replaced with'], ['#tagID'=>'content to be replaced with'], ...]
+     *
+     * @return array
+     */
+    public static function contentReplace($array)
+    {
+        return $array;
+    }
+    
+    /**
+     * @param $array
+     *
+     * @return array
+     */
+    public static function formValidation($array)
+    {
+        return $array;
+    }
+    
+    /**
      * @param $title
      * @param $content
      * @param null $models
@@ -167,8 +223,10 @@ class EasyAjax extends Widget
      *
      * @return array
      */
-    public static function modal($content, $title = null, $models = null, $size = null, $options = [], $footer = null){
+    public static function modal($content, $title = null, $models = null, $size = null, $options = [], $footer = null)
+    {
         $modal = new Modal();
+        
         return $modal->generate($content, $title, $models, $size, $options, $footer);
     }
     
@@ -184,7 +242,8 @@ class EasyAjax extends Widget
     public static function notifySuccess($message, $title = null, $settings = [])
     {
         $settings['type'] = 'success';
-        $notify = new Notify();
+        $notify           = new Notify();
+        
         return $notify->generate($message, $title, $notify->settings['notify']['iconSuccess'], null, null,
             $settings);
     }
@@ -201,7 +260,8 @@ class EasyAjax extends Widget
     public static function notifyInfo($message, $title = null, $settings = [])
     {
         $settings['type'] = 'info';
-        $notify = new Notify();
+        $notify           = new Notify();
+        
         return $notify->generate($message, $title, $notify->settings['notify']['iconInfo'], null, null,
             $settings);
     }
@@ -218,7 +278,8 @@ class EasyAjax extends Widget
     public static function notifyWarning($message, $title = null, $settings = [])
     {
         $settings['type'] = 'warning';
-        $notify = new Notify();
+        $notify           = new Notify();
+        
         return (new Notify())->generate($message, $title, $notify->settings['notify']['iconWarning'], null, null,
             $settings);
     }
@@ -235,7 +296,8 @@ class EasyAjax extends Widget
     public static function notifyDanger($message, $title = null, $settings = [])
     {
         $settings['type'] = 'danger';
-        $notify = new Notify();
+        $notify           = new Notify();
+        
         return (new Notify())->generate($message, $title, $notify->settings['notify']['iconDanger'], null, null,
             $settings);
     }

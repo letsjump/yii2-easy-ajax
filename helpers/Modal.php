@@ -8,7 +8,6 @@
 
 namespace letsjump\easyAjax\helpers;
 
-
 use letsjump\easyAjax\EasyAjax;
 
 class Modal extends EasyAjax
@@ -42,29 +41,37 @@ class Modal extends EasyAjax
      */
     public function generate($content, $title, $models, $size, $options, $footerView)
     {
-        
-        if ($footerView === false) {
-            $footer = '';
-        } else if ($footerView !== null && $footerView !== false) {
-            $footer = $this->view->render($this->settings['viewPath']
-                                          . DIRECTORY_SEPARATOR
-                                          . $footerView);
-        } else {
-            $footer = $this->view->render($this->settings['viewPath']
-                                          . DIRECTORY_SEPARATOR
-                                          . $this->settings['modal']['defaultViewFooter'], ['models'=>$models]);
-        }
-        
-        if($size == null) {
-            $size = \yii\bootstrap\Modal::SIZE_DEFAULT;
-        }
-        
         return [
             'title'   => $title,
             'content' => $content,
-            'footer'  => $footer,
-            'size'    => $size,
+            'footer'  => $this->getFooter($models, $footerView),
+            'size'    => empty($size) ? \yii\bootstrap\Modal::SIZE_DEFAULT : $size,
             'options' => $options,
         ];
+    }
+    
+    /**
+     * @param \yii\base\Model[] $models
+     * @param string $footerView
+     *
+     * @return string
+     */
+    private function getFooter($models, $footerView)
+    {
+        if ($footerView === false) {
+            return '';
+        } else if ($footerView !== null && $footerView !== false) {
+            return $this->view->render(
+                $this->settings['viewPath']
+                . DIRECTORY_SEPARATOR
+                . $footerView
+            );
+        } else {
+            return $this->view->render(
+                $this->settings['viewPath']
+                . DIRECTORY_SEPARATOR
+                . $this->settings['modal']['defaultViewFooter'], ['models' => $models]
+            );
+        }
     }
 }
