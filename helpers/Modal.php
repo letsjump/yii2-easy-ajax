@@ -51,6 +51,8 @@ class Modal extends EasyAjax
     }
     
     /**
+     * @todo fare in modo che se non ci sono modelli, questi non debbano venir passati
+     *
      * @param \yii\base\Model[] $models
      * @param string $footerView
      *

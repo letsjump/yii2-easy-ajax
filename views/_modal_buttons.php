@@ -21,7 +21,7 @@ if ( ! empty($models)) {
 }
 
 $buttons['cancel'] = Html::button(
-    Yii::t('sys', 'Annulla'),
+    Yii::t('sys', 'Cancel'),
     [
         'class'        => 'btn btn-default',
         'data-dismiss' => 'modal'
