@@ -28,22 +28,17 @@ $buttons['cancel'] = Html::button(
     ]
 );
 
-if (
-    isset($models)
-    && (
-        Helper::checkRoute('create')
-        || Helper::checkRoute('modal')
-        || Helper::checkRoute('update')
-    )
-) {
-    $buttons['save'] = Html::submitButton(
-        $models[0]->isNewRecord ? Yii::t('app', 'Add') : Yii::t('app', 'Save'),
-        [
-            'class'       => 'btn btn-info pull-right modalform-submit',
-            'data-formid' => ! empty($formId) ? Json::encode($formId) : null
-        ]
-    );
-}
+$message = (isset($models) && method_exists($models[0], 'isNewRecord'))
+    ? Yii::t('app', 'Add')
+    : Yii::t('app', 'Save');
+
+$buttons['save'] = Html::submitButton(
+    $message,
+    [
+        'class'       => 'btn btn-info pull-right modalform-submit',
+        'data-formid' => ! empty($formId) ? Json::encode($formId) : null
+    ]
+);
 
 foreach ($buttons as $button) {
     echo $button;
