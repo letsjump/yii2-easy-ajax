@@ -169,27 +169,27 @@ class EasyAjax extends Widget
      */
     public static function confirm($message, $url)
     {
-        return ['message' => $message, 'url' => $url];
+        return [self::CONFIRM => ['message' => $message, 'url' => $url]];
     }
     
     /**
      * @param string $url
      *
-     * @return string
+     * @return array
      */
     public static function redirectAjax($url)
     {
-        return $url;
+        return [self::REDIRECT_AJAX => $url];
     }
     
     /**
      * @param string $url
      *
-     * @return string
+     * @return array
      */
     public static function redirectJavascript($url)
     {
-        return $url;
+        return [self::REDIRECT => $url];
     }
     
     /**
@@ -199,7 +199,7 @@ class EasyAjax extends Widget
      */
     public static function contentReplace($array)
     {
-        return $array;
+        return [self::CONTENT_REPLACE => $array];
     }
     
     /**
@@ -209,7 +209,7 @@ class EasyAjax extends Widget
      */
     public static function formValidation($array)
     {
-        return $array;
+        return [self::FORM_VALIDATION => $array];
     }
     
     /**
@@ -226,7 +226,7 @@ class EasyAjax extends Widget
     {
         $modal = new Modal();
         
-        return $modal->generate($content, $title, $models, $size, $options, $footer);
+        return [self::MODAL => $modal->generate($content, $title, $models, $size, $options, $footer)];
     }
     
     /**
@@ -243,8 +243,8 @@ class EasyAjax extends Widget
         $settings['type'] = 'success';
         $notify           = new Notify();
         
-        return $notify->generate($message, $title, $notify->settings['notify']['iconSuccess'], null, null,
-            $settings);
+        return [self::NOTIFY => $notify->generate($message, $title, $notify->settings['notify']['iconSuccess'], null, null,
+            $settings)];
     }
     
     /**
@@ -261,8 +261,8 @@ class EasyAjax extends Widget
         $settings['type'] = 'info';
         $notify           = new Notify();
         
-        return $notify->generate($message, $title, $notify->settings['notify']['iconInfo'], null, null,
-            $settings);
+        return [self::NOTIFY => $notify->generate($message, $title, $notify->settings['notify']['iconInfo'], null, null,
+            $settings)];
     }
     
     /**
@@ -279,8 +279,8 @@ class EasyAjax extends Widget
         $settings['type'] = 'warning';
         $notify           = new Notify();
         
-        return (new Notify())->generate($message, $title, $notify->settings['notify']['iconWarning'], null, null,
-            $settings);
+        return [self::NOTIFY => (new Notify())->generate($message, $title, $notify->settings['notify']['iconWarning'], null, null,
+            $settings)];
     }
     
     /**
@@ -297,8 +297,8 @@ class EasyAjax extends Widget
         $settings['type'] = 'danger';
         $notify           = new Notify();
         
-        return (new Notify())->generate($message, $title, $notify->settings['notify']['iconDanger'], null, null,
-            $settings);
+        return [self::NOTIFY => (new Notify())->generate($message, $title, $notify->settings['notify']['iconDanger'], null, null,
+            $settings)];
     }
     
     /**
@@ -325,7 +325,7 @@ class EasyAjax extends Widget
     ) {
         $settings['type'] = $type;
         
-        return (new Notify())->generate($message, $title, $icon, $url, $target, $settings);
+        return [self::NOTIFY => (new Notify())->generate($message, $title, $icon, $url, $target, $settings)];
     }
     
     /**

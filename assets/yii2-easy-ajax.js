@@ -39,9 +39,13 @@ window.yii.easyAjax = (function ($) {
 
         response: function (data) {
             if (data && typeof data !== "undefined") {
-                jQuery.each(data, function (myfunction, parameters) {
-                    if (typeof methods[myfunction] === "function") {
-                        methods[myfunction](parameters);
+                jQuery.each(data, function (key, value) {
+                    if(typeof value === "object") {
+                        jQuery.each(value, function (myFunction, parameters) {
+                            if (typeof methods[myFunction] === "function") {
+                                methods[myFunction](parameters);
+                            }
+                        });
                     }
                 });
             }
