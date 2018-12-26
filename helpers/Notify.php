@@ -47,8 +47,14 @@ class Notify extends EasyAjax
         parent::init();
     }
     
-    public function generate($message, $title, $icon = null, $url = null, $target = null, $settings = [])
-    {
+    public function generate(
+        $message,
+        $title,
+        $icon = null,
+        $url = null,
+        $target = null,
+        $settings = []
+    ) {
         $options = [
             'message' => $message,
             'title'   => $title,
@@ -65,7 +71,10 @@ class Notify extends EasyAjax
         
         return [
             'options'  => $options,
-            'settings' => ArrayHelper::merge($this->settings['notify']['clientSettings'], $settings)
+            'settings' => ArrayHelper::merge(
+                $this->settings['notify']['clientSettings'],
+                $settings
+            )
         ];
     }
 }

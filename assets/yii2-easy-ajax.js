@@ -6,17 +6,25 @@
 //     };
 // })(jQuery);
 
+
 window.yii.easyAjax = (function ($) {
+
+    "use strict";
+
+    var modalId = '#' + yea_modalid;
+
+    var modal = jQuery(modalId);
+
+    var originalModal = null;
 
     var pub = {
         // whether this module is currently active. If false, init() will not be called for this module
         // it will also not be called for all its child modules. If this property is undefined, it means true.
-        isActive: true,
-        init:     function () {
-            modal = jQuery('#' + yea_modalid);
-            originalModal = modal.clone();
-            /** @var modal Bootstrap modal */
+        modal: modal,
+        //originalModal: originalModal,
 
+        init:     function () {
+            originalModal = modal.clone();
         },
 
         request: function (type, url, data) {
@@ -39,11 +47,11 @@ window.yii.easyAjax = (function ($) {
             }
         },
 
-        resetModal: function (modal) {
-            $("#yea-modal").remove();
+        resetModal: function () {
+            jQuery(modalId).remove();
             jQuery(".modal-backdrop").remove();
-            //console.log(originalModal.clone())
             $("body").append(originalModal.clone());
+            modal = jQuery(modalId);
         }
 
     };
@@ -115,7 +123,7 @@ window.yii.easyAjax = (function ($) {
         },
 
         yea_modal: function (data) {
-            pub.resetModal(modal);
+            pub.resetModal();
             if (typeof data.title !== "undefined") {
                 modal.find(".modal-header h4").html(data.title);
             }
@@ -171,7 +179,7 @@ window.yii.easyAjax = (function ($) {
 })(window.jQuery);
 
 jQuery(document).ready(function () {
-    yii.easyAjax.init();
+    //yii.easyAjax.init();
     jQuery(document).on("click", ".open-modal, [data-ajax='1']", function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -179,10 +187,10 @@ jQuery(document).ready(function () {
         var attribute = jQuery(this)[0].hasAttribute("data-href") ? "data-href" : "href";
         if (jQuery(this)[0].hasAttribute("data-yea-confirm")) {
             if (confirm(jQuery(this).attr("data-yea-confirm"))) {
-                yii.easyAjax.request(request_method, jQuery(this).attr(attribute))
+                yii.easyAjax.request(request_method, jQuery(this).attr(attribute));
             }
         } else {
-            yii.easyAjax.request(request_method, jQuery(this).attr(attribute))
+            yii.easyAjax.request(request_method, jQuery(this).attr(attribute));
         }
     });
 

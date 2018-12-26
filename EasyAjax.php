@@ -133,7 +133,6 @@ class EasyAjax extends Widget
         $view = $this->getView();
         
         $view->registerJsVar('yea_modalid', $this->modal_id, View::POS_HEAD);
-//        $view->registerJs('easyAjax.init("' . $this->modal_id . '")', View::POS_END);
         
         // registering assets
         if ( ! Yii::$app->request->isAjax) {
