@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package   yii2-easy-ajax
+ * @author    Gianpaolo Scrigna <letsjump@gmail.com>
+ * @link https://github.com/letsjump/yii2-easy-ajax
+ * @copyright Copyright &copy; Gianpaolo Scrigna, beintech.it, 2018
+ * @version   $version
+ */
 
 /**
  * @var \letsjump\easyAjax\EasyAjax $widget

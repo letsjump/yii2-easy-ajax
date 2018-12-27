@@ -1,11 +1,10 @@
-// (function ($) {
-//     $.fn.resetModal = function () {
-//         $(this).remove();
-//         var myClone = yii.easyAjax.originalModal.clone();
-//         jQuery("body").append(myClone);
-//     };
-// })(jQuery);
-
+/*
+ * @package   yii2-easy-ajax
+ * @author    Gianpaolo Scrigna <letsjump@gmail.com>
+ * @link https://github.com/letsjump/yii2-easy-ajax
+ * @copyright Copyright &copy; Gianpaolo Scrigna, beintech.it, 2018
+ * @version   $version
+ */
 
 window.yii.easyAjax = (function ($) {
 
@@ -23,7 +22,7 @@ window.yii.easyAjax = (function ($) {
         modal: modal,
         //originalModal: originalModal,
 
-        init:     function () {
+        init: function () {
             originalModal = modal.clone();
         },
 
@@ -40,7 +39,7 @@ window.yii.easyAjax = (function ($) {
         response: function (data) {
             if (data && typeof data !== "undefined") {
                 jQuery.each(data, function (key, value) {
-                    if(typeof value === "object") {
+                    if (typeof value === "object") {
                         jQuery.each(value, function (myFunction, parameters) {
                             if (typeof methods[myFunction] === "function") {
                                 methods[myFunction](parameters);
@@ -64,16 +63,24 @@ window.yii.easyAjax = (function ($) {
 
         yea_confirm: function (data) {
             if (confirm(data.message)) {
-                jQuery.get(data.url);
+                jQuery.get(data.url, function (response) {
+                    if(typeof data.processResponse && data.processResponse === true) {
+                        pub.response(response);
+                    }
+                });
             }
         },
 
-        yea_ajax_redirect: function (data) {
-            jQuery.get(data);
-        },
-
-        yea_js_redirect: function (data) {
-            window.location.href = data;
+        yea_redirect: function (data) {
+            if(data.ajax === true) {
+                jQuery.get(data.url, function (response) {
+                    if(typeof data.processResponse && data.processResponse === true) {
+                        pub.response(response);
+                    }
+                });
+            } else {
+                window.location.href = data.url;
+            }
         },
 
         yea_content_replace: function (data) {
@@ -184,23 +191,22 @@ window.yii.easyAjax = (function ($) {
 
 jQuery(document).ready(function () {
     //yii.easyAjax.init();
-    jQuery(document).on("click", ".open-modal, [data-ajax='1']", function (e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        var request_method = (jQuery(this)[0].hasAttribute("data-yea-method") && jQuery(this).attr("data-yea-method") === "post") ? "post" : "get"
-        var attribute = jQuery(this)[0].hasAttribute("data-href") ? "data-href" : "href";
-        if (jQuery(this)[0].hasAttribute("data-yea-confirm")) {
-            if (confirm(jQuery(this).attr("data-yea-confirm"))) {
+    jQuery(document)
+        .on("click", ".open-modal, [data-ajax='1']", function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            var request_method = (jQuery(this)[0].hasAttribute("data-yea-method") && jQuery(this).attr("data-yea-method") === "post") ? "post" : "get"
+            var attribute = jQuery(this)[0].hasAttribute("data-href") ? "data-href" : "href";
+            if (jQuery(this)[0].hasAttribute("data-yea-confirm")) {
+                if (confirm(jQuery(this).attr("data-yea-confirm"))) {
+                    yii.easyAjax.request(request_method, jQuery(this).attr(attribute));
+                }
+            } else {
                 yii.easyAjax.request(request_method, jQuery(this).attr(attribute));
             }
-        } else {
-            yii.easyAjax.request(request_method, jQuery(this).attr(attribute));
-        }
-    });
-
-    $(document)
+        })
         .keypress(function (e) {
-            if (e.which === 13 && ($("#" + yea-modalid).data("bs.modal") || {}).isShown && !$("textarea").is(":focus")) {
+            if (e.which === 13 && ($("#" + yea - modalid).data("bs.modal") || {}).isShown && !$("textarea").is(":focus")) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 $("#modalform-submit").click();
@@ -219,10 +225,13 @@ jQuery(document).ready(function () {
                     url:     form.attr("action"),
                     data:    data,
                     success: function (data) {
-                        yii.easyAjax.response(data)
-                        if (data.yea_success === true) {
-                            $("[data-dismiss=modal]").trigger({type: "click"});
-                        }
+                        console.log(data);
+                        //if(typeof data.yea_success !== "undefined") {
+                            yii.easyAjax.response(data);
+                            if (data.yea_success === true) {
+                                $("[data-dismiss=modal]").trigger({type: "click"});
+                            }
+                        //}
                     }
                 });
             });

@@ -1,9 +1,10 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: letsjump
- * Date: 29/10/18
- * Time: 11.28
+ * @package   yii2-easy-ajax
+ * @author    Gianpaolo Scrigna <letsjump@gmail.com>
+ * @link https://github.com/letsjump/yii2-easy-ajax
+ * @copyright Copyright &copy; Gianpaolo Scrigna, beintech.it, 2018
+ * @version   $version
  */
 
 namespace letsjump\easyAjax;
@@ -33,8 +34,7 @@ class EasyAjax extends Widget
     /*
      * Redirects
      */
-    const REDIRECT = 'yea_js_redirect';
-    const REDIRECT_AJAX = 'yea_ajax_redirect';
+    const REDIRECT = 'yea_redirect';
     
     /**
      * Reloads
@@ -51,7 +51,7 @@ class EasyAjax extends Widget
     /**
      * Replaces
      */
-    const CONTENT_REPLACE = 'yea_replace';
+    const CONTENT_REPLACE = 'yea_content_replace';
     
     /**
      * Confirms & alerts
@@ -162,24 +162,26 @@ class EasyAjax extends Widget
     }
     
     /**
-     * @param string $message
-     * @param string $url
+     * @param string $message The message on confirm window
+     * @param string $url the url to fire after click on "Ok"
+     * @param bool $processResponse if the response has to be processed by easyAjax
      *
      * @return array
      */
-    public static function confirm($message, $url)
+    public static function confirm($message, $url, $processResponse = true)
     {
-        return [self::CONFIRM => ['message' => $message, 'url' => $url]];
+        return [self::CONFIRM => ['message' => $message, 'url' => $url, 'processResponse' => $processResponse]];
     }
     
     /**
      * @param string $url
+     * @param bool $processResponse if the jQuery.get() response has to be passed by easyAjax response
      *
      * @return array
      */
-    public static function redirectAjax($url)
+    public static function redirectAjax($url, $processResponse = true)
     {
-        return [self::REDIRECT_AJAX => $url];
+        return [self::REDIRECT => ['url' => $url, 'ajax' => true, 'processResponse' => $processResponse]];
     }
     
     /**
@@ -189,7 +191,7 @@ class EasyAjax extends Widget
      */
     public static function redirectJavascript($url)
     {
-        return [self::REDIRECT => $url];
+        return [self::REDIRECT => ['url' => $url, 'ajax' => false, 'processResponse' => false]];
     }
     
     /**
@@ -230,6 +232,19 @@ class EasyAjax extends Widget
     }
     
     /**
+     * @param $title
+     * @param $content
+     * @param null $size
+     * @param array $options
+     *
+     * @return array
+     */
+    public static function modalBasic($content, $title = null, $size = null, $options = [])
+    {
+        return [self::MODAL => (new Modal())->generate($content, $title, null, $size, $options, $footer = false)];
+    }
+    
+    /**
      * Render a Success Notify with default settings
      *
      * @param string $message
@@ -243,8 +258,10 @@ class EasyAjax extends Widget
         $settings['type'] = 'success';
         $notify           = new Notify();
         
-        return [self::NOTIFY => $notify->generate($message, $title, $notify->settings['notify']['iconSuccess'], null, null,
-            $settings)];
+        return [
+            self::NOTIFY => $notify->generate($message, $title, $notify->settings['notify']['iconSuccess'], null, null,
+                $settings)
+        ];
     }
     
     /**
@@ -261,8 +278,10 @@ class EasyAjax extends Widget
         $settings['type'] = 'info';
         $notify           = new Notify();
         
-        return [self::NOTIFY => $notify->generate($message, $title, $notify->settings['notify']['iconInfo'], null, null,
-            $settings)];
+        return [
+            self::NOTIFY => $notify->generate($message, $title, $notify->settings['notify']['iconInfo'], null, null,
+                $settings)
+        ];
     }
     
     /**
@@ -279,8 +298,11 @@ class EasyAjax extends Widget
         $settings['type'] = 'warning';
         $notify           = new Notify();
         
-        return [self::NOTIFY => (new Notify())->generate($message, $title, $notify->settings['notify']['iconWarning'], null, null,
-            $settings)];
+        return [
+            self::NOTIFY => (new Notify())->generate($message, $title, $notify->settings['notify']['iconWarning'], null,
+                null,
+                $settings)
+        ];
     }
     
     /**
@@ -297,8 +319,11 @@ class EasyAjax extends Widget
         $settings['type'] = 'danger';
         $notify           = new Notify();
         
-        return [self::NOTIFY => (new Notify())->generate($message, $title, $notify->settings['notify']['iconDanger'], null, null,
-            $settings)];
+        return [
+            self::NOTIFY => (new Notify())->generate($message, $title, $notify->settings['notify']['iconDanger'], null,
+                null,
+                $settings)
+        ];
     }
     
     /**
