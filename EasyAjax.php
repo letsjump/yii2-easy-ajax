@@ -204,6 +204,10 @@ class EasyAjax extends Widget
         return [self::CONTENT_REPLACE => $array];
     }
     
+    public static function reloadPjax($array){
+        return [self::RELOAD_PJAX => $array];
+    }
+    
     /**
      * @param $array
      *

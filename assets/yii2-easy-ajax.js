@@ -195,6 +195,7 @@ jQuery(document).ready(function () {
         .on("click", ".open-modal, [data-ajax='1']", function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
+            //console.log(this);
             var request_method = (jQuery(this)[0].hasAttribute("data-yea-method") && jQuery(this).attr("data-yea-method") === "post") ? "post" : "get"
             var attribute = jQuery(this)[0].hasAttribute("data-href") ? "data-href" : "href";
             if (jQuery(this)[0].hasAttribute("data-yea-confirm")) {
@@ -225,8 +226,6 @@ jQuery(document).ready(function () {
                     url:     form.attr("action"),
                     data:    data,
                     success: function (data) {
-                        console.log(data);
-                        //if(typeof data.yea_success !== "undefined") {
                             yii.easyAjax.response(data);
                             if (data.yea_success === true) {
                                 $("[data-dismiss=modal]").trigger({type: "click"});
