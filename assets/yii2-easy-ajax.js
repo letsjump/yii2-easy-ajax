@@ -55,7 +55,7 @@ window.yii.easyAjax = (function ($) {
             jQuery(".modal-backdrop").remove();
             $("body").append(originalModal.clone());
             modal = jQuery(modalId);
-        }
+        },
 
     };
 
@@ -169,9 +169,13 @@ window.yii.easyAjax = (function ($) {
             modal.modal();
         },
 
+        yea_modal_close: function () {
+            $("[data-dismiss=modal]").trigger({type: "click"});
+        },
+
         yea_notify: function (data) {
             jQuery.notify(data.options, data.settings);
-        },
+        }
     }
 
     // modal.on("shown.bs.modal", function () {
@@ -207,7 +211,7 @@ jQuery(document).ready(function () {
             }
         })
         .keypress(function (e) {
-            if (e.which === 13 && ($("#" + yea - modalid).data("bs.modal") || {}).isShown && !$("textarea").is(":focus")) {
+            if (e.which === 13 && ($("#" + yea_modalid).data("bs.modal") || {}).isShown && !$("textarea").is(":focus")) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 $("#modalform-submit").click();

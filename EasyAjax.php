@@ -31,6 +31,8 @@ class EasyAjax extends Widget
     const NOTIFY_ICON = 'icon';
     const NOTIFY_TITLE = 'title';
     
+    const SAVE = 'yea-save';
+    
     /*
      * Redirects
      */
@@ -116,14 +118,14 @@ class EasyAjax extends Widget
      * Modals
      */
     const MODAL = 'yea_modal';
-    const MODAL_TITLE = 'title';
-    const MODAL_HEADER = 'header';
-    const MODAL_OPTIONS = 'options';
-    const MODAL_CONTENT = 'body';
-    const MODAL_FOOTER = 'footer';
-    const MODAL_SIZE = 'size';
-    const MODAL_ADDCSSCLASS = 'addClass';
-    const MODAL_CLOSE = 'close';
+    const MODAL_CLOSE = 'yea_modal_close';
+//    const MODAL_TITLE = 'title';
+//    const MODAL_HEADER = 'header';
+//    const MODAL_OPTIONS = 'options';
+//    const MODAL_CONTENT = 'body';
+//    const MODAL_FOOTER = 'footer';
+//    const MODAL_SIZE = 'size';
+//    const MODAL_ADDCSSCLASS = 'addClass';
     
     /**
      *
@@ -204,6 +206,11 @@ class EasyAjax extends Widget
         return [self::CONTENT_REPLACE => $array];
     }
     
+    /**
+     * @param $array
+     *
+     * @return array
+     */
     public static function reloadPjax($array){
         return [self::RELOAD_PJAX => $array];
     }
@@ -246,6 +253,12 @@ class EasyAjax extends Widget
     public static function modalBasic($content, $title = null, $size = null, $options = [])
     {
         return [self::MODAL => (new Modal())->generate($content, $title, null, $size, $options, $footer = false)];
+    }
+    
+    
+    public static function modalClose()
+    {
+        return [self::MODAL_CLOSE => true];
     }
     
     /**
