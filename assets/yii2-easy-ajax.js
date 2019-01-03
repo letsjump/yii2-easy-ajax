@@ -10,20 +10,25 @@ window.yii.easyAjax = (function ($) {
 
     "use strict";
 
-    var modalId = '#' + yea_modalid;
+    var options = {
+        modal: {
+            id: '#' +  yea_modalid,
+            title_id: ".modal-header h4",
+            content_id: ".modal-body",
+            footer_id: ".modal-footer",
+            autofocus: true,
+            snapshot: null,
+        },
+    };
 
-    var modal = jQuery(modalId);
-
-    var originalModal = null;
+    var modal = jQuery(options.modal.id);
 
     var pub = {
-        // whether this module is currently active. If false, init() will not be called for this module
-        // it will also not be called for all its child modules. If this property is undefined, it means true.
+
         modal: modal,
-        //originalModal: originalModal,
 
         init: function () {
-            originalModal = modal.clone();
+            options.modal.snapshot = modal.clone();
         },
 
         request: function (type, url, data) {
@@ -51,10 +56,10 @@ window.yii.easyAjax = (function ($) {
         },
 
         resetModal: function () {
-            jQuery(modalId).remove();
+            jQuery(options.modal.id).remove();
             jQuery(".modal-backdrop").remove();
-            $("body").append(originalModal.clone());
-            modal = jQuery(modalId);
+            jQuery("body").append(options.modal.snapshot.clone());
+            modal = jQuery(options.modal.id);
         },
 
     };
@@ -134,13 +139,17 @@ window.yii.easyAjax = (function ($) {
         },
 
         yea_modal: function (data) {
+
             pub.resetModal();
+
             if (typeof data.title !== "undefined") {
-                modal.find(".modal-header h4").html(data.title);
+                modal.find(options.modal.title_id).html(data.title);
             }
+
             if (typeof data.content !== "undefined") {
-                modal.find(".modal-body").html(data.content);
+                modal.find(options.modal.content_id).html(data.content);
             }
+
             //if exist phantomModal create all html required into the modal
             if (typeof data.options !== "undefined") {
                 if (typeof data.options.phantomModal !== "undefined") {
@@ -152,14 +161,16 @@ window.yii.easyAjax = (function ($) {
                     modal.find(".modal-body > div:first").addClass("phantom-brother");
                 }
             }
+
             if (typeof data.footer !== "undefined") {
-                modal.find(".modal-footer").html(data.footer);
+                modal.find(options.modal.footer_id).html(data.footer);
             }
 
             if (typeof data.size !== "undefined") {
                 modal.find(".modal-dialog")
                     .addClass(data.size);
             }
+
             if (typeof data.addClass !== "undefined") {
                 jQuery.each(data.addClass, function (key, val) {
                     modal.addClass(val);
@@ -167,6 +178,16 @@ window.yii.easyAjax = (function ($) {
             }
 
             modal.modal();
+
+            if(options.modal.autofocus === true) {
+                modal.find("[autofocus]").focus();
+                if (modal.find("[autofocus]").not(":focus")) {
+                    setTimeout(function () {
+                        modal.find("[autofocus]").focus();
+                    }, 200);
+                }
+            }
+
         },
 
         yea_modal_close: function () {
@@ -177,17 +198,6 @@ window.yii.easyAjax = (function ($) {
             jQuery.notify(data.options, data.settings);
         }
     }
-
-    // modal.on("shown.bs.modal", function () {
-    //     modal.find("[autofocus]").focus();
-    //     if (modal.find("[autofocus]").not(":focus")) {
-    //         setTimeout(function () {
-    //             modal.find("[autofocus]").focus();
-    //         }, 200);
-    //     }
-    // });
-
-    // ... private functions and properties go here ...
 
     return pub;
 
@@ -214,10 +224,10 @@ jQuery(document).ready(function () {
             if (e.which === 13 && ($("#" + yea_modalid).data("bs.modal") || {}).isShown && !$("textarea").is(":focus")) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
-                $("#modalform-submit").click();
+                $(".modalform-submit").click();
             }
         })
-        .on("click", ".modalform-submit, #modalform-submit", function (e) {
+        .on("click", ".modalform-submit", function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
             var forms = $(this).data("formid");
@@ -234,7 +244,6 @@ jQuery(document).ready(function () {
                             if (data.yea_success === true) {
                                 $("[data-dismiss=modal]").trigger({type: "click"});
                             }
-                        //}
                     }
                 });
             });
