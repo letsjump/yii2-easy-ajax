@@ -2,7 +2,7 @@
     "name": "letsjump/yii2-easy-ajax",
     "description": "An easy way to do things with Ajax",
     "type": "yii2-extension",
-    "license": "Apache-2.0",
+    "license": "MIT",
     "version": "v0.7.0",
     "authors": [
         {
