@@ -382,4 +382,5 @@ class EasyAjax extends Widget
         
         parent::run();
     }
+    
 }

@@ -23,12 +23,15 @@ window.yii.easyAjax = (function ($) {
 
     var modal = jQuery(options.modal.id);
 
+    var methods;
+
     var pub = {
 
         modal: modal,
 
-        init: function () {
+        init: function (extra_methods) {
             options.modal.snapshot = modal.clone();
+            methods = Object.assign(default_methods, extra_methods);
         },
 
         request: function (type, url, data) {
@@ -64,7 +67,7 @@ window.yii.easyAjax = (function ($) {
 
     };
 
-    var methods = {
+    var default_methods = {
 
         yea_confirm: function (data) {
             if (confirm(data.message)) {
@@ -204,12 +207,18 @@ window.yii.easyAjax = (function ($) {
 })(window.jQuery);
 
 jQuery(document).ready(function () {
-    //yii.easyAjax.init();
+    yii.easyAjax.init({
+        yea_fullcalendar_refetch: function(data) {
+            $(data.id).fullCalendar('refetchEvents');
+        },
+        yea_fullcalendar_event_remove: function(data) {
+            $(data.calendar_id).fullCalendar('removeEvents', data.event_id);
+        }
+    });
     jQuery(document)
-        .on("click", ".open-modal, [data-ajax='1']", function (e) {
+        .on("click", "[data-ajax='1']", function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            //console.log(this);
             var request_method = (jQuery(this)[0].hasAttribute("data-yea-method") && jQuery(this).attr("data-yea-method") === "post") ? "post" : "get"
             var attribute = jQuery(this)[0].hasAttribute("data-href") ? "data-href" : "href";
             if (jQuery(this)[0].hasAttribute("data-yea-confirm")) {
