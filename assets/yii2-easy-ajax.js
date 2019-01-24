@@ -38,7 +38,8 @@ window.yii.easyAjax = (function ($) {
             return $.ajax({
                 url:      url,
                 dataType: 'json',
-                type:     type
+                type:     type,
+                data: data
             }).done(function (data) {
                 pub.response(data);
             });
