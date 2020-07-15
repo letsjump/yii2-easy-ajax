@@ -20,7 +20,6 @@ window.yii.easyAjax = (function ($) {
 
     var pub = {
 
-        //modal: modal,
         /**
          * Function init
          *
@@ -40,14 +39,23 @@ window.yii.easyAjax = (function ($) {
          * @param data
          * @returns {*}
          */
-        request: function (type, url, data) {
-            return $.ajax({
-                url:      url,
-                dataType: 'json',
-                type:     type,
-                data: data
-            }).done(function (data) {
+        request: function (element) {
+
+            var req_params = requestor(element, options.modal.id);
+
+            var request = $.ajax({
+                url:      req_params.target,
+                data:     req_params.data,
+                type:     req_params.method,
+                dataType: "json"
+            });
+
+            request.done(function (data) {
                 pub.response(data);
+            });
+
+            request.fail(function (jqXHR, textStatus) {
+                console.log(textStatus)
             });
         },
 
@@ -59,9 +67,10 @@ window.yii.easyAjax = (function ($) {
             if (data && typeof data !== "undefined") {
                 jQuery.each(data, function (key, value) {
                     if (typeof value === "object") {
-                        jQuery.each(value, function (myFunction, parameters) {
-                            if (typeof methods[myFunction] === "function") {
-                                methods[myFunction](parameters);
+                        jQuery.each(value, function (method, params) {
+                            if (typeof methods[method] === "function") {
+                                methods[method](params);
+                                //if(callback()) return;
                             }
                         });
                     }
@@ -95,13 +104,13 @@ window.yii.easyAjax = (function ($) {
          *
          * Explicitly makes a request after a javascript confirm popup
          *
-         * @param data.url string
-         * @param data.processResponse bool If true invoke another easyajax method with the response data
+         * @param params.url string
+         * @param params.processResponse bool If true invoke another easyajax method with the response data
          */
-        yea_confirm: function (data) {
-            if (window.confirm(data.message)) {
-                jQuery.get(data.url, function (response) {
-                    if (typeof data.processResponse && data.processResponse === true) {
+        yea_confirm: function (params) {
+            if (window.confirm(params.message)) {
+                jQuery.get(params.url, function (response) {
+                    if (typeof params.processResponse && params.processResponse === true) {
                         pub.response(response);
                     }
                 });
@@ -113,19 +122,19 @@ window.yii.easyAjax = (function ($) {
          *
          * Redirect to a page, a controller action or to another EasyAjax method
          *
-         * @param data.url
-         * @param data.ajax bool If false, do a javascript redirection
-         * @param data.processResponse bool If true invoke another easyajax method with the response data
+         * @param params.url
+         * @param params.ajax bool If false, do a javascript redirection
+         * @param params.processResponse bool If true invoke another easyajax method with the response data
          */
-        yea_redirect: function (data) {
-            if (data.ajax === true) {
-                jQuery.get(data.url, function (response) {
-                    if (typeof data.processResponse && data.processResponse === true) {
+        yea_redirect: function (params) {
+            if (params.ajax === true) {
+                jQuery.get(params.url, function (response) {
+                    if (typeof params.processResponse && params.processResponse === true) {
                         pub.response(response);
                     }
                 });
             } else {
-                window.location.href = data.url;
+                window.location.href = params.url;
             }
         },
 
@@ -134,15 +143,15 @@ window.yii.easyAjax = (function ($) {
          *
          * Set the HTML contents of each element in the set of matched elements.
          *
-         * @param data.id string Id of the div to replace
-         * @param data.tagContent string content to insert
+         * @param params.id string Id of the div to replace
+         * @param params.tagContent string content to insert
          *
          * Accept an array of contents to be replaced:
          * {tag_id: tag_html_content, tag_id: tag_html_content, ...}
          *
          */
-        yea_content_replace: function (data) {
-            jQuery.each(data, function (tagId, tagContent) {
+        yea_content_replace: function (params) {
+            jQuery.each(params, function (tagId, tagContent) {
                 jQuery(tagId).html(tagContent);
             });
         },
@@ -154,11 +163,11 @@ window.yii.easyAjax = (function ($) {
          * Please refer to the official Yii2 documentation
          * @link https://www.yiiframework.com/doc/api/2.0/yii-widgets-activeform#validate()-detail
          *
-         * @param data.formId string
-         * @param data.formErrors array of errors grouped by field ID
+         * @param params.formId string
+         * @param params.formErrors array of errors grouped by field ID
          */
-        yea_form_validation: function (data) {
-            jQuery.each(data, function (formId, formErrors) {
+        yea_form_validation: function (params) {
+            jQuery.each(params, function (formId, formErrors) {
                 jQuery.each(formErrors, function (key, val) {
                     jQuery(formId).yiiActiveForm("updateAttribute", key, [val]);
                 });
@@ -170,35 +179,35 @@ window.yii.easyAjax = (function ($) {
          *
          * Reload the content of one or more pjax containers based on their ID
          *
-         * @param data array|string Id or array to reload
+         * @param params array|string Id or array to reload
          */
-        yea_pjax_reload: function (data) {
+        yea_pjax_reload: function (params) {
             //Rebuild container_id as object if necessary
-            jQuery.each(data, function (index, container) {
+            jQuery.each(params, function (index, container) {
                 if (!jQuery.isPlainObject(container)) {
-                    data[index] = {};
-                    data[index].container = container;
+                    params[index] = {};
+                    params[index].container = container;
                 }
                 //Add timeout if not exist in the container object
-                if (!("timeout" in data[index])) {
-                    data[index].timeout = jQuery(data[index].container).attr("data-pjax-timeout");
+                if (!("timeout" in params[index])) {
+                    params[index].timeout = jQuery(params[index].container).attr("data-pjax-timeout");
                 }
                 //Removes elements to reload passed from the controller that not exist in page avoid javascript error in console
                 //Happen when same controller is used in different page and so need to reload different elements in different pages
                 if (!jQuery(container).length) {
-                    data.splice(index, 1);
+                    params.splice(index, 1);
                 }
             });
-            if (data.length) {
+            if (params.length) {
                 //Reload containers when the previous end loading
-                jQuery.each(data, function (index, container) {
-                    if (index + 1 < data.length) {
+                jQuery.each(params, function (index, container) {
+                    if (index + 1 < params.length) {
                         jQuery(container.container).one("pjax:end", function (xhr, options) {
-                            jQuery.pjax.reload(data.yea_pjax_reload[index + 1]);
+                            jQuery.pjax.reload(params.yea_pjax_reload[index + 1]);
                         });
                     }
                 });
-                jQuery.pjax.reload(data[0]);
+                jQuery.pjax.reload(params[0]);
             }
         },
 
@@ -207,37 +216,37 @@ window.yii.easyAjax = (function ($) {
          *
          * Configure, adds content, title, an optional footer and open the bootstrap modal
          *
-         * @param data.title string
-         * @param data.content string
-         * @param data.footer string
-         * @param data.size string
-         * @param data.addClass string
+         * @param params.title string
+         * @param params.content string
+         * @param params.footer string
+         * @param params.size string
+         * @param params.addClass string
          *
          * If easyAjax.options.autofocus is TRUE, set the cursor on the first input of its form
          */
-        yea_modal: function (data) {
+        yea_modal: function (params) {
 
             pub.resetModal();
 
-            if (typeof data.title !== "undefined") {
-                modal.find(options.modal.title_id).html(data.title);
+            if (typeof params.title !== "undefined") {
+                modal.find(options.modal.title_id).html(params.title);
             }
 
-            if (typeof data.content !== "undefined") {
-                modal.find(options.modal.content_id).html(data.content);
+            if (typeof params.content !== "undefined") {
+                modal.find(options.modal.content_id).html(params.content);
             }
 
-            if (typeof data.footer !== "undefined") {
-                modal.find(options.modal.footer_id).html(data.footer);
+            if (typeof params.footer !== "undefined") {
+                modal.find(options.modal.footer_id).html(params.footer);
             }
 
-            if (typeof data.size !== "undefined") {
+            if (typeof params.size !== "undefined") {
                 modal.find(".modal-dialog")
-                    .addClass(data.size);
+                    .addClass(params.size);
             }
 
-            if (typeof data.addClass !== "undefined") {
-                jQuery.each(data.addClass, function (key, val) {
+            if (typeof params.addClass !== "undefined") {
+                jQuery.each(params.addClass, function (key, val) {
                     modal.addClass(val);
                 });
             }
@@ -252,7 +261,6 @@ window.yii.easyAjax = (function ($) {
                     }, 200);
                 }
             }
-
         },
 
         /**
@@ -269,23 +277,23 @@ window.yii.easyAjax = (function ($) {
          *
          * @see http://bootstrap-notify.remabledesigns.com/ for its configuration
          *
-         * @param data
+         * @param params
          */
-        yea_notify: function (data) {
-            jQuery.notify(data.options, data.settings);
+        yea_notify: function (params) {
+            jQuery.notify(params.options, params.settings);
         },
 
         /**
          * Bootstrap Tabs
          *
-         * @param data.tab string ID of the tab
-         * @param data.content string content to update
+         * @param params.tab string ID of the tab
+         * @param params.content string content to update
          */
-        yea_tab: function (data) {
-            if (data.tab !== 'undefined') {
-                var pane = '#' + data.tab;
-                if (data.content !== 'undefined') {
-                    jQuery(pane).html(data.content);
+        yea_tab: function (params) {
+            if (params.tab !== 'undefined') {
+                var pane = '#' + params.tab;
+                if (params.content !== 'undefined') {
+                    jQuery(pane).html(params.content);
                 }
                 jQuery(pane).tab('show');
             }
@@ -296,7 +304,57 @@ window.yii.easyAjax = (function ($) {
 
 })(window.jQuery);
 
+/**
+ *
+ * @param element The element clicked
+ * @param modal_id YiiEasyAjax options
+ * @returns {{method: string, data: [], form_id: boolean, target: null}}
+ */
+var requestor = function (element, modal_id) {
+
+    var object = {
+        method:  'get',
+        data:    [],
+        target:  null,
+        form_id: false
+    }
+
+    var target_attribute = 'href';
+
+    // set request method
+    if (element.hasAttribute("data-yea-method")) {
+        object.method = element.getAttribute("data-yea-method");
+    }
+
+    if (element.hasAttribute("data-href")) {
+        target_attribute = "data-href";
+    }
+
+    object.target = element.getAttribute(target_attribute);
+
+    if (element.hasAttribute("data-form-id")) {
+        object.form_id = element.getAttribute("data-form-id");
+    } else if (
+        element.closest("#" + modal_id) !== null
+        && document.getElementById(modal_id).getElementsByTagName('form').length > 0
+    ) {
+        object.form_id = document.getElementById(modal_id).getElementsByTagName('form')[0].getAttribute('id');
+    }
+    if (object.form_id !== null && object.form_id !== false) {
+        var form = $("#" + object.form_id);
+        if (form.attr('method') !== null) {
+            object.method = form.attr('method');
+        }
+        object.target = form.attr('action');
+        object.data = form.serializeArray();
+    }
+
+    return object;
+}
+
 jQuery(document).ready(function () {
+
+    // https://stackoverflow.com/questions/28322636/synchronous-xmlhttprequest-warning-and-script
 
     yii.easyAjax.init(yea_options.yea_extends);
 
@@ -304,32 +362,19 @@ jQuery(document).ready(function () {
         .on("click", "[" + yea_options.trigger + "='1']", function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            var request_method = (jQuery(this)[0].hasAttribute("data-yea-method")) ? jQuery(this).attr("data-yea-method") : "get";
-            var attribute = jQuery(this)[0].hasAttribute("data-href") ? "data-href" : "href";
             if (jQuery(this)[0].hasAttribute("data-yea-confirm")) {
                 if (window.confirm(jQuery(this).attr("data-yea-confirm"))) {
-                    yii.easyAjax.request(request_method, jQuery(this).attr(attribute));
+                    yii.easyAjax.request(this);
                 }
             } else {
-                yii.easyAjax.request(request_method, jQuery(this).attr(attribute));
+                yii.easyAjax.request(this);
             }
         })
-        .keypress(function (e) {
-            if (e.which === 13 && ($("#" + yea_modalid).data("bs.modal") || {}).isShown && !$("textarea").is(":focus")) {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-                $(".modalform-submit").click();
-            }
-        })
-        .on("click", ".modalform-submit", function (e) {
+    .keypress(function (e) {
+        if (e.which === 13 && ($("#" + yea_options.modal.id).data("bs.modal") || {}).isShown && !$("textarea").is(":focus")) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            var forms = $(this).data("formid");
-            jQuery.each(forms, function (index, name) {
-                var form = $("#" + name);
-                var data = form.serializeArray();
-                data.push({name: "yea-save", value: true});
-                yii.easyAjax.request(form.attr('method'), form.attr("action"), data)
-            });
-        });
+            $(".modalform-submit").click();
+        }
+    })
 });

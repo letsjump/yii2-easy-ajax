@@ -11,16 +11,14 @@
 
 namespace letsjump\easyAjax;
 
-use letsjump\easyAjax\helpers\Modal;
+use letsjump\easyAjax\helpers\Modal as YEAmodal;
 use letsjump\easyAjax\helpers\Notify;
 use letsjump\easyAjax\web\AnimateAsset;
 use letsjump\easyAjax\web\EasyAjaxAsset;
 use letsjump\easyAjax\web\NotifyAsset;
 use Yii;
-use yii\bootstrap\Html;
 use yii\bootstrap\Widget;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Json;
 use yii\web\View;
 
 class EasyAjax extends Widget
@@ -51,10 +49,10 @@ class EasyAjax extends Widget
     
     public $renderModal = true;
     
-    protected $_defaultOptions = [
-        'viewPath' => '@vendor/letsjump/yii2-easy-ajax/views',
-        'trigger' => 'data-yea',
-        'modal'    => [
+    protected $baseOptions = [
+        'viewPath'    => '@vendor/letsjump/yii2-easy-ajax/views',
+        'trigger'     => 'data-yea',
+        'modal'       => [
             'viewFile'          => '_modal_default',
             'id'                => 'yea-modal',
             'title_id'          => '.modal-header h4',
@@ -64,14 +62,14 @@ class EasyAjax extends Widget
             'snapshot'          => null,
             'defaultViewFooter' => '_modal_buttons'
         ],
-        'notify'   => [
+        'notify'      => [
             'viewFile'       => '_notify_default',
             'iconSuccess'    => 'glyphicon glyphicon-ok-circle',
             'iconInfo'       => 'glyphicon glyphicon-info-sign',
             'iconWarning'    => 'glyphicon glyphicon-warning-sign',
             'iconDanger'     => 'glyphicon glyphicon-exclamation-sign',
             'clientSettings' => [
-                // Refer to the Bootstrap Notify documentation for all the options available
+                // Refer to the Bootstrap Notify documentation for any other option available
                 // http://bootstrap-notify.remabledesigns.com/
             ]
         ],
@@ -79,22 +77,28 @@ class EasyAjax extends Widget
     ];
     
     /**
+     * @var array $defaultOptions
+     */
+    public $defaultOptions;
+    
+    /**
      *
      */
     public function init()
     {
         $view = $this->getView();
-        if($this->registerAssets === true) {
-            $view->registerJsVar('yea_options', $this->getOptions(), View::POS_HEAD);
-    
+        $this->setDefaultOptions();
+        if ($this->registerAssets === true) {
+            $view->registerJsVar('yea_options', $this->defaultOptions, View::POS_HEAD);
+            
             // registering assets
             if ( ! Yii::$app->request->isAjax) {
                 EasyAjaxAsset::register($view);
-        
+                
                 if ($this->publishAnimateAsset === true) {
                     AnimateAsset::register($view);
                 }
-        
+                
                 if ($this->publishNotifyAsset === true) {
                     NotifyAsset::register($view);
                 }
@@ -107,11 +111,19 @@ class EasyAjax extends Widget
     /**
      * @return array
      */
-    public function getOptions()
+    public function getDefaultOptions()
     {
-        return isset(Yii::$app->params['easyAjax'])
-            ? ArrayHelper::merge($this->_defaultOptions, Yii::$app->params['easyAjax'])
-            : $this->_defaultOptions;
+        return $this->defaultOptions;
+    }
+    
+    /**
+     *
+     */
+    public function setDefaultOptions()
+    {
+        $this->defaultOptions = isset(Yii::$app->params['easyAjax'])
+            ? ArrayHelper::merge($this->baseOptions, Yii::$app->params['easyAjax'])
+            : $this->baseOptions;
     }
     
     /**
@@ -191,16 +203,24 @@ class EasyAjax extends Widget
     /**
      * @param $title
      * @param $content
-     * @param null $models
+     * @param null $form_id
      * @param null $size
      * @param array $options
      * @param null $footer
      *
      * @return array
      */
-    public static function modal($content, $title = null, $models = null, $size = null, $options = [], $footer = null)
+    public static function modal($content, $title = null, $form_id = null, $size = null, $options = [], $footer = null)
     {
-        return ['yea_modal' => (new Modal())->generate($content, $title, $models, $size, $options, $footer)];
+        $modal             = new YEAModal();
+        $modal->title      = $title;
+        $modal->content    = $content;
+        $modal->form_id    = $form_id;
+        $modal->size       = $size;
+        $modal->options    = $options;
+        $modal->footerView = $footer;
+        
+        return ['yea_modal' => $modal->generate()];
     }
     
     /**
@@ -214,7 +234,14 @@ class EasyAjax extends Widget
      */
     public static function modalBasic($content, $title = null, $size = null, $footer = null, $options = [])
     {
-        return ['yea_modal' => (new Modal())->generate($content, $title, null, $size, $options, $footer)];
+        $modal             = new YEAModal();
+        $modal->title      = $title;
+        $modal->content    = $content;
+        $modal->size       = $size;
+        $modal->options    = $options;
+        $modal->footerView = $footer;
+        
+        return ['yea_modal' => $modal->generate()];
     }
     
     
@@ -236,11 +263,12 @@ class EasyAjax extends Widget
     {
         $settings['type'] = 'success';
         $notify           = new Notify();
+        $notify->message  = $message;
+        $notify->title    = $title;
+        $notify->settings = $settings;
+        $notify->icon     = $notify->defaultOptions['notify']['iconSuccess'];
         
-        return [
-            'yea_notify' => $notify->generate($message, $title, $notify->settings['notify']['iconSuccess'], null, null,
-                $settings)
-        ];
+        return ['yea_notify' => $notify->generate()];
     }
     
     /**
@@ -256,11 +284,12 @@ class EasyAjax extends Widget
     {
         $settings['type'] = 'info';
         $notify           = new Notify();
+        $notify->message  = $message;
+        $notify->title    = $title;
+        $notify->settings = $settings;
+        $notify->icon     = $notify->defaultOptions['notify']['iconInfo'];
         
-        return [
-            'yea_notify' => $notify->generate($message, $title, $notify->settings['notify']['iconInfo'], null, null,
-                $settings)
-        ];
+        return ['yea_notify' => $notify->generate()];
     }
     
     /**
@@ -276,17 +305,12 @@ class EasyAjax extends Widget
     {
         $settings['type'] = 'warning';
         $notify           = new Notify();
+        $notify->message  = $message;
+        $notify->title    = $title;
+        $notify->settings = $settings;
+        $notify->icon     = $notify->defaultOptions['notify']['iconWarning'];
         
-        return [
-            'yea_notify' => $notify->generate(
-                $message,
-                $title,
-                $notify->settings['notify']['iconWarning'],
-                null,
-                null,
-                $settings
-            )
-        ];
+        return ['yea_notify' => $notify->generate()];
     }
     
     /**
@@ -302,12 +326,12 @@ class EasyAjax extends Widget
     {
         $settings['type'] = 'danger';
         $notify           = new Notify();
+        $notify->message  = $message;
+        $notify->title    = $title;
+        $notify->settings = $settings;
+        $notify->icon     = $notify->defaultOptions['notify']['iconDanger'];
         
-        return [
-            'yea_notify' => $notify->generate($message, $title, $notify->settings['notify']['iconDanger'], null,
-                null,
-                $settings)
-        ];
+        return ['yea_notify' => $notify->generate()];
     }
     
     /**
@@ -333,19 +357,28 @@ class EasyAjax extends Widget
         $settings = []
     ) {
         $settings['type'] = $type;
+        $notify           = new Notify();
+        $notify->message  = $message;
+        $notify->title    = $title;
+        $notify->settings = $settings;
+        $notify->icon     = $icon;
+        $notify->url      = $url;
+        $notify->target   = $target;
+        $notify->settings = $settings;
         
-        return ['yea_notify' => (new Notify())->generate($message, $title, $icon, $url, $target, $settings)];
+        return ['yea_notify' => $notify->generate()];
     }
     
     /**
      * 1. render the bootstrap modal element at the bottom of the document body
+     *
      * @return string|void
      */
     public function run()
     {
-        // render the modal at the bottom of the doc body
+        // render the modal at the bottom of the document body
         if ($this->renderModal === true) {
-            (new Modal())->inject();
+            (new YEAModal())->inject();
         }
         
         parent::run();

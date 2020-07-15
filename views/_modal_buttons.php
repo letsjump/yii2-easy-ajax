@@ -10,9 +10,8 @@
  */
 
 
+use letsjump\easyAjax\helpers\Modal;
 use yii\helpers\Html;
-use yii\helpers\StringHelper;
-use yii\helpers\Json;
 
 /**
  * @var $models \yii\base\Model
@@ -20,14 +19,9 @@ use yii\helpers\Json;
  *
  */
 
+$buttons = [];
+
 if ($models !== null) {
-    $formId = [];
-    if ( ! is_array($models)) {
-        $models = [$models];
-    }
-    foreach ($models as $model) {
-        $formId[] = strtolower(StringHelper::basename(get_class($model))) . '-form';
-    }
     
     $buttons['cancel'] = Html::button(
         Yii::t('app', 'Cancel'),
@@ -37,15 +31,16 @@ if ($models !== null) {
         ]
     );
     
-    $message = (isset($models) && method_exists($models[0], 'isNewRecord'))
-        ? Yii::t('app', 'Add')
-        : Yii::t('app', 'Save');
+    $message = '';
     
     $buttons['save'] = Html::submitButton(
-        $message,
+        Modal::isNewRecord($models)
+            ? Yii::t('app', 'Add')
+            : Yii::t('app', 'Save'),
         [
-            'class'       => 'btn btn-primary pull-right modalform-submit',
-            'data-formid' => ! empty($formId) ? Json::encode($formId) : null
+            'class'       => 'btn btn-primary pull-right',
+            'data-yea' => 1,
+            // 'data-form-id' => Modal::getFormIdFromModelName($models)
         ]
     );
 } else {

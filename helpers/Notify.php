@@ -18,71 +18,72 @@
 
 namespace letsjump\easyAjax\helpers;
 
-
 use letsjump\easyAjax\EasyAjax;
 use yii\helpers\ArrayHelper;
 
 class Notify extends EasyAjax
 {
     /**
-     * Info type of the alert
+     * @var string Notify message
      */
-    const TYPE_INFO = 'info';
-    /**
-     * Danger type of the alert
-     */
-    const TYPE_DANGER = 'danger';
-    /**
-     * Success type of the alert
-     */
-    const TYPE_SUCCESS = 'success';
-    /**
-     * Warning type of the alert
-     */
-    const TYPE_WARNING = 'warning';
+    protected $message;
     
-    public $settings = [];
+    /**
+     * @var string Notify title
+     */
+    protected $title;
+    
+    /**
+     * @var string Notify icon
+     */
+    protected $icon;
+    
+    /**
+     * @var string Notify link url attribute
+     */
+    protected $url;
+    
+    /**
+     * @var string Notify link target attribute
+     */
+    protected $target;
+    
+    /**
+     * @var array Notify settings
+     */
+    protected $settings;
     
     public function init()
     {
-        $this->settings = $this->getOptions();
-        
-        if ( ! isset($this->settings['notify']['clientSettings']['template'])) {
-            $this->settings['notify']['clientSettings']['template'] = $this->render($this->settings['viewPath']
-                                                                                    . DIRECTORY_SEPARATOR
-                                                                                    . $this->settings['notify']['viewFile']);
-        }
-        
         parent::init();
     }
     
-    public function generate(
-        $message,
-        $title,
-        $icon = null,
-        $url = null,
-        $target = null,
-        $settings = []
-    ) {
+    public function generate()
+    {
         $options = [
-            'message' => $message,
-            'title'   => $title,
+            'message' => $this->message,
+            'title'   => $this->title,
         ];
-        if ( ! empty($icon)) {
-            $options['icon'] = $icon;
+        if ( ! empty($this->icon)) {
+            $options['icon'] = $this->icon;
         }
-        if ( ! empty($url)) {
-            $options['url'] = $url;
+        if ( ! empty($this->url)) {
+            $options['url'] = $this->url;
         }
-        if ( ! empty($target)) {
-            $options['target'] = $target;
+        if ( ! empty($this->target)) {
+            $options['target'] = $this->target;
+        }
+        if ( ! isset($this->defaultOptions['notify']['clientSettings']['template'])) {
+            $this->defaultOptions['notify']['clientSettings']['template'] = $this->render($this->defaultOptions['viewPath']
+                                                                                          . DIRECTORY_SEPARATOR
+                                                                                          . $this->defaultOptions['notify']['viewFile']);
         }
         
         return [
             'options'  => $options,
             'settings' => ArrayHelper::merge(
-                $this->settings['notify']['clientSettings'],
-                $settings
+                $this->defaultOptions['notify']['clientSettings'],
+                $this->settings
             )
         ];
     }

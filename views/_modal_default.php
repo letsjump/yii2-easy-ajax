@@ -20,11 +20,10 @@ use yii\bootstrap\Modal;
 <?php Modal::begin([
     'header'  => '<h4 class="modal-title">Title</h4>',
     'footer'  => '',
-    'id'      => $widget->options['modal']['modal_id'],
+    'id'      => $widget->defaultOptions['modal']['id'],
     'size'    => Modal::SIZE_DEFAULT,
     'options' => [
         'tabindex' => false, // important for Select2 to work properly
-//      'class' => 'phantomModal',
     ],
 ]) ?>
     <div id='systemModalContent'></div>

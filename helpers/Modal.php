@@ -10,7 +10,7 @@
  */
 
 /**
- * Created by PhpStorm.
+ * Created by PhpStorm.00
  * User: letsjump
  * Date: 31/10/18
  * Time: 11.59
@@ -21,16 +21,22 @@ namespace letsjump\easyAjax\helpers;
 use letsjump\easyAjax\EasyAjax;
 use Yii;
 use yii\bootstrap\Modal as BSModal;
+use yii\helpers\ArrayHelper;
+use yii\helpers\StringHelper;
 
 class Modal extends EasyAjax
 {
-    public $options = [];
-    
     const SIZE_SMALL = BSModal::SIZE_SMALL, SIZE_DEFAULT = BSModal::SIZE_DEFAULT, SIZE_LARGE = BSModal::SIZE_LARGE;
+    
+    protected $content;
+    protected $title;
+    protected $form_id;
+    protected $footer;
+    protected $size = self::SIZE_DEFAULT;
+    protected $footerView;
     
     public function init()
     {
-        $this->options = $this->getOptions();
         parent::init();
     }
     
@@ -39,28 +45,21 @@ class Modal extends EasyAjax
      */
     public function inject()
     {
-        echo $this->render($this->options['viewPath'] . DIRECTORY_SEPARATOR . $this->options['modal']['viewFile'],
+        echo $this->render($this->defaultOptions['viewPath'] . DIRECTORY_SEPARATOR . $this->defaultOptions['modal']['viewFile'],
             ['widget' => $this]);
     }
     
     /**
-     * @param string $title
-     * @param string $content
-     * @param \yii\base\Model[] $models
-     * @param string $size
-     * @param array $options
-     * @param string $footerView
-     *
      * @return array
      */
-    public function generate($content, $title, $models, $size, $options, $footerView)
+    public function generate()
     {
         return [
-            'title'   => $title,
-            'content' => $content,
-            'footer'  => $this->getFooter($models, $footerView),
-            'size'    => empty($size) ? self::SIZE_DEFAULT : $size,
-            'options' => $options,
+            'title'   => $this->title,
+            'content' => $this->content,
+            'footer'  => $this->getFooter($this->form_id, $this->footerView),
+            'size'    => empty($this->size) ? self::SIZE_DEFAULT : $this->size,
+            'options' => ArrayHelper::merge($this->defaultOptions, $this->options),
         ];
     }
     
@@ -72,6 +71,36 @@ class Modal extends EasyAjax
             'yii\web\JqueryAsset'                 => false,
             'letsjump\EasyAjax\web\EasyAjaxAsset' => false
         ];
+    }
+    
+    /**
+     * @param array|string $models
+     *
+     * @return string
+     */
+    public static function getFormIdFromModelName($models)
+    {
+        return ! empty($models) ? strtolower(StringHelper::basename(get_class($models))) . '-form' : null;
+    }
+    
+    /**
+     * @param $models
+     *
+     * @return bool
+     */
+    public static function isNewRecord($models)
+    {
+        if ( ! is_array($models)) {
+            $models = [$models];
+        }
+        
+        foreach ($models as $model) {
+            if (method_exists($model, 'isNewRecord')) {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     /**
@@ -88,12 +117,12 @@ class Modal extends EasyAjax
         
         if ($footerView !== null) {
             return $this->view->render(
-                $this->options['viewPath'] . DIRECTORY_SEPARATOR . $footerView
+                $this->defaultOptions['viewPath'] . DIRECTORY_SEPARATOR . $footerView
             );
         }
         
         return $this->view->render(
-            $this->options['viewPath'] . DIRECTORY_SEPARATOR . $this->options['modal']['defaultViewFooter'],
+            $this->defaultOptions['viewPath'] . DIRECTORY_SEPARATOR . $this->defaultOptions['modal']['defaultViewFooter'],
             ['models' => $models]
         );
     }

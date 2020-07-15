@@ -49,7 +49,7 @@ class ActionColumn extends \yii\grid\ActionColumn
         parent::init();
         $this->initDefaultButtons();
         $this->headerWidth();
-        $this->yea_options = (new EasyAjax())->getOptions();
+        $this->yea_options = (new EasyAjax())->getDefaultOptions();
     }
     
     /**
@@ -74,7 +74,7 @@ class ActionColumn extends \yii\grid\ActionColumn
     protected function initDefaultButton($name, $additionalOptions = [], $iconName = null)
     {
         if ( ! isset($this->buttons[$name]) && strpos($this->template, '{' . $name . '}') !== false) {
-            $this->buttons[$name] = function ($url, $model, $key) use ($name, $additionalOptions) {
+            $this->buttons[$name] = function ($url, $model) use ($name, $additionalOptions) {
                 $options = $this->initAdditionalOptions($name);
                 
                 return Html::a(
