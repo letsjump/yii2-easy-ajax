@@ -18,46 +18,57 @@
 
 namespace letsjump\easyAjax\helpers;
 
-use letsjump\easyAjax\EasyAjax;
+use letsjump\easyAjax\EasyAjaxBase;
 use yii\helpers\ArrayHelper;
 
-class Notify extends EasyAjax
+class Notify extends EasyAjaxBase
 {
+    /**
+     * Notification default types
+     */
+    const TYPE_SUCCESS = 'success', TYPE_INFO = 'info', TYPE_WARNING = 'warning', TYPE_DANGER = 'danger';
+    
     /**
      * @var string Notify message
      */
-    protected $message;
+    public $message;
     
     /**
      * @var string Notify title
      */
-    protected $title;
+    public $title;
     
     /**
      * @var string Notify icon
      */
-    protected $icon;
+    public $icon;
     
     /**
      * @var string Notify link url attribute
      */
-    protected $url;
+    public $url;
     
     /**
      * @var string Notify link target attribute
      */
-    protected $target;
+    public $target;
     
     /**
      * @var array Notify settings
      */
-    protected $settings;
+    public $settings;
     
+    /**
+     * Model init
+     */
     public function init()
     {
         parent::init();
     }
     
+    /**
+     * @return array The Notify ajax response trigger
+     */
     public function generate()
     {
         $options = [
@@ -74,15 +85,15 @@ class Notify extends EasyAjax
             $options['target'] = $this->target;
         }
         if ( ! isset($this->defaultOptions['notify']['clientSettings']['template'])) {
-            $this->defaultOptions['notify']['clientSettings']['template'] = $this->render($this->defaultOptions['viewPath']
+            $this->configuration['notify']['clientSettings']['template'] = $this->view->render($this->configuration['viewPath']
                                                                                           . DIRECTORY_SEPARATOR
-                                                                                          . $this->defaultOptions['notify']['viewFile']);
+                                                                                          . $this->configuration['notify']['viewFile']);
         }
         
         return [
             'options'  => $options,
             'settings' => ArrayHelper::merge(
-                $this->defaultOptions['notify']['clientSettings'],
+                $this->configuration['notify']['clientSettings'],
                 $this->settings
             )
         ];

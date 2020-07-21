@@ -308,9 +308,10 @@ window.yii.easyAjax = (function ($) {
  *
  * @param element The element clicked
  * @param modal_id YiiEasyAjax options
- * @returns {{method: string, data: [], form_id: boolean, target: null}}
+ * @returns {{method: string, data: [], form_id: boolean|string, target: null|string}}
  */
-var requestor = function (element, modal_id) {
+var requestor;
+requestor = function (element, modal_id) {
 
     var object = {
         method:  'get',
@@ -350,7 +351,7 @@ var requestor = function (element, modal_id) {
     }
 
     return object;
-}
+};
 
 jQuery(document).ready(function () {
 

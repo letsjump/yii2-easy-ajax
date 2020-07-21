@@ -20,7 +20,7 @@ use yii\bootstrap\Modal;
 <?php Modal::begin([
     'header'  => '<h4 class="modal-title">Title</h4>',
     'footer'  => '',
-    'id'      => $widget->defaultOptions['modal']['id'],
+    'id'      => $widget->configuration['modal']['id'],
     'size'    => Modal::SIZE_DEFAULT,
     'options' => [
         'tabindex' => false, // important for Select2 to work properly
@@ -28,3 +28,4 @@ use yii\bootstrap\Modal;
 ]) ?>
     <div id='systemModalContent'></div>
 <?php Modal::end(); ?>
+

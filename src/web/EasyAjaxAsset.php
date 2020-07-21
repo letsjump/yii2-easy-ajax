@@ -21,7 +21,7 @@ use yii\web\AssetBundle;
 class EasyAjaxAsset extends AssetBundle
 {
     
-    public $sourcePath = '@vendor/letsjump/yii2-easy-ajax/assets';
+    public $sourcePath = '@vendor/letsjump/yii2-easy-ajax/src/assets';
     
     public $js = [
         'test.js',

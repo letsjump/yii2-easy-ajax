@@ -14,14 +14,14 @@ use letsjump\easyAjax\helpers\Modal;
 use yii\helpers\Html;
 
 /**
- * @var $models \yii\base\Model
+ * @var $formId string
  * @var $this   \yii\web\View
  *
  */
 
 $buttons = [];
 
-if ($models !== null) {
+if ($formId !== null) {
     
     $buttons['cancel'] = Html::button(
         Yii::t('app', 'Cancel'),
@@ -34,13 +34,11 @@ if ($models !== null) {
     $message = '';
     
     $buttons['save'] = Html::submitButton(
-        Modal::isNewRecord($models)
-            ? Yii::t('app', 'Add')
-            : Yii::t('app', 'Save'),
+        Yii::t('app', 'Save'),
         [
             'class'       => 'btn btn-primary pull-right',
             'data-yea' => 1,
-            // 'data-form-id' => Modal::getFormIdFromModelName($models)
+            'data-form-id' => $formId
         ]
     );
 } else {
@@ -52,7 +50,6 @@ if ($models !== null) {
         ]
     );
 }
-
 
 foreach ($buttons as $button) {
     echo $button;

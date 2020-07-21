@@ -49,7 +49,7 @@ class ActionColumn extends \yii\grid\ActionColumn
         parent::init();
         $this->initDefaultButtons();
         $this->headerWidth();
-        $this->yea_options = (new EasyAjax())->getDefaultOptions();
+        $this->yea_options = (new EasyAjax())->getConfiguration();
     }
     
     /**
@@ -180,7 +180,7 @@ class ActionColumn extends \yii\grid\ActionColumn
         $width = 'width: ' . $this->buttonWidth * substr_count($this->template, '{') . 'px;';
         if ( ! isset($this->headerOptions['style'])) {
             $this->headerOptions['style'] = $width;
-        } elseif (strpos($this->headerOptions['style'], 'width:') === false) {
+        } else if (strpos($this->headerOptions['style'], 'width:') === false) {
             $this->headerOptions['style'] = $width . ' ' . $this->headerOptions['style'];
         }
         

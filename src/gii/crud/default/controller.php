@@ -162,7 +162,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 
     /**
     * Create or update a <?= $modelClass ?> in a bootstrap modal
-    * @param null $id
+    * @param null|integer $id
     *
     * @return array
     */
@@ -192,7 +192,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 $model->isNewRecord
                     ? Yii::t('app', 'Add a new <?= strtolower($modelClass) ?>')
                     : Yii::t('app', 'Update <?= strtolower($modelClass) ?>'),
-                $model
+                    '<?= Inflector::camel2id($modelClass) ?>-form'
             ),
         ];
     }
