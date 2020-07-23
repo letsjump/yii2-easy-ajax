@@ -109,12 +109,11 @@ class EasyAjaxBase extends Component
     protected $view;
     
     /**
-     * Component init
+     * Component initialization
      */
     public function init()
     {
         $this->view = Yii::$app->view;
-        //$this->defaultOptions = $this->setDefaultOptions();
         $this->configuration = $this->getConfiguration();
         
         if ($this->registerAssets === true) {

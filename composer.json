@@ -3,7 +3,7 @@
     "description": "",
     "type": "yii2-extension",
     "license": "MIT",
-    "version": "v1.0.0",
+    "version": "v0.9.1",
     "authors": [
         {
             "name": "Gianpaolo Scrigna",
@@ -20,5 +20,8 @@
         "psr-4": {
             "letsjump\\easyAjax\\": "src/"
         }
+    },
+    "extra": {
+        "bootstrap": "letsjump\\easyAjax\\EasyAjaxBootstrap"
     }
 }
