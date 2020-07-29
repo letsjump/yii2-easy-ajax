@@ -24,14 +24,11 @@ class EasyAjaxAsset extends AssetBundle
     public $sourcePath = '@vendor/letsjump/yii2-easy-ajax/src/assets';
     
     public $js = [
-        'test.js',
         'yii2-easy-ajax.js'
     ];
     
     public $depends = [
         'yii\web\YiiAsset',
-        'yii\bootstrap\BootstrapAsset',
-        'yii\bootstrap\BootstrapPluginAsset',
     ];
     
     public function init()

@@ -16,7 +16,6 @@ use yii\base\Component;
 use yii\helpers\ArrayHelper;
 use yii\web\View;
 use letsjump\easyAjax\helpers\Modal;
-use letsjump\easyAjax\web\AnimateAsset;
 use letsjump\easyAjax\web\EasyAjaxAsset;
 use letsjump\easyAjax\web\NotifyAsset;
 
@@ -37,16 +36,6 @@ class EasyAjaxBase extends Component
      * that implements the Notify plugin
      */
     public $publishNotifyAsset = true;
-    
-    /**
-     * @var bool $publishAnimateAsset
-     * Publish the bundled Animate asset.
-     *
-     * To avoid asset duplication, it can be set to false.
-     * Useful if your application has another extension
-     * that implements the Animate asset
-     */
-    public $publishAnimateAsset = true;
     
     /**
      * @var bool $renderModal
@@ -123,10 +112,6 @@ class EasyAjaxBase extends Component
             // registering assets
             if ( ! Yii::$app->request->isAjax) {
                 EasyAjaxAsset::register($this->view);
-                
-                if ($this->publishAnimateAsset === true) {
-                    AnimateAsset::register($this->view);
-                }
                 
                 if ($this->publishNotifyAsset === true) {
                     NotifyAsset::register($this->view);

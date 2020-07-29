@@ -28,9 +28,8 @@ class NotifyAsset extends AssetBundle
     ];
     
     public $depends = [
-        'yii\web\YiiAsset',
-        'yii\bootstrap\BootstrapAsset',
-        'yii\bootstrap\BootstrapPluginAsset',
+        'letsjump\easyAjax\web\EasyAjaxAsset',
+        'letsjump\easyAjax\web\AnimateAsset'
     ];
     
     public function init()
