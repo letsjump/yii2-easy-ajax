@@ -1,17 +1,19 @@
 # yii2-easy-ajax
-Relax your keyboard with EasyAjax
 
-EasyAjax are a bunch of Yii functions that allows you to speed up your app coding minimizing the amount of code you need to write to interact with Bootstap UI and with javascript in general.
-Notifies, modals, tabs, pjax-refreshes, form validations among others can now be set up and launched with only a line of code into the controller's action response.  
+Relax your keyboard with Yii2 EasyAjax
 
-For example,  `EasyAjax::modal('My modal content')` opens a modal with "My modal content" as _content_, while `EasyAjax::reloadPjax(['#p0'])` reloads the content of pjax-container identified by `id="p0"`
+EasyAjax are a bunch of Yii methods that allows you to speed up your app coding minimizing the amount of code you need to write to interact with Bootstap UI and with Javascript in general.
+
+[Notifies](#Notify), [modals](#Modal), [tabs](#Tabs), [pjax-reloads](#Pjax-reload), [form validations](#Form-valitation) among others can now be set up and launched with only a line of code into the controller's action response.  
+
+For example,  `EasyAjax::modal('My modal content')` opens a modal with "My modal content" as _content_, while `EasyAjax::reloadPjax(['#p0'])` reloads the `pjax-container` identified by `id="p0"`
 
 EasyAjax further provides:
 
-- Complete and ready-to-use **ajax CRUD**, thanks to the integrated _Gii module_
-- Fully configurable functionalities both globally and action-specific
+- Complete and ready-to-use **ajax CRUD**, thanks to the integrated [Gii generator](#Ajax-CRUD-with-Gii)
+- Fully configurable options both globally and action-specific
 - Customizable HTML templates
-- Extensible with your own functions
+- Extensible with your own methods
 
 ## Installation
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
@@ -41,7 +43,7 @@ To use this extension, add the following code to your web application configurat
 ]
 ```
 
-To use the integrated Gii Module, add the following code to your application configuration:
+To use the integrated [Gii generator](#Ajax-CRUD-with-Gii), add the following code to your application configuration:
 
 ```php
 if (YII_ENV_DEV) {
@@ -62,15 +64,18 @@ if (YII_ENV_DEV) {
 }
 ```
 
-Please note: The integrate Gii module allows you to generate the code for AJAX as well as the standard CRUD.
+Please note: The integrated [Gii generator](#Ajax-CRUD-with-Gii) allows you to generate the code for AJAX as well as the standard CRUD.
 
 ## Usage
+
+- [1. Requests](#1.-Requests)
+- [2. Responses](2.-Responses)
 
 ### 1. Requests
 
 EasyAjax requests are simple jQuery AJAX requests that need to refer to a controller action appropriately configured:
 
-The easiest way to perform an EasyAjax request to a controller action is adding the `data-yea=1` attribute to the Html tag in charge of the action:
+The easiest way to perform an EasyAjax request to a controller action is adding the `data-yea=1` attribute to the Html tag in charge of the _onclick javascript event_:
 
 ```html
 <a data-yea="1" class="btn btn-lg btn-success" href="<?= \yii\helpers\Url::to(['controller/action-notify']) ?>">notify something</a>
@@ -84,13 +89,13 @@ or
 
 > NOTE:
 > 
-> To explore any other Html attributes available and to know all the details, please refer to the guide
+> To explore any other Html attributes available and to know all the details, please refer to the [guide](docs/guide/requests.md)
 
-### 2 Responses
+### 2. Responses
 
-The controller actions interacting with EasyAjax should return a Json array, and they only need to contain one or more EasyAjax methods in their response array. 
+The controller actions interacting with EasyAjax should return a _Json array_, and they only need to contain one or more EasyAjax methods in their response array. 
 
-In the following example, EasyAjax: 
+In the following example...
 
 ```php
 public function actionSaveMyModel()
@@ -106,20 +111,19 @@ public function actionSaveMyModel()
     ];
 }
 ```
-- Closes a bootstrap modal opened in the UI
-- Update the pjax-container `#p0`
-- Shows a Bootstrap Notify informing the user of the successful operation
+... EasyAjax will:
+- Closes the [bootstrap modal](https://getbootstrap.com/docs/3.4/javascript/#modals) opened in the UI
+- [Reload](https://github.com/yiisoft/jquery-pjax#fnpjax) the pjax-container `#p0`
+- Shows a [Bootstrap Notify](http://bootstrap-notify.remabledesigns.com/) informing the user of the successful operation
 
 Here are the available methods in detail:
 
 #### Modals
 
-Le bootstrap modal delle EasyAjax sono completamente configurabili, e per instanziarle è possibile utilizzare il metodo: `EasyAjax::modal(content, title, *form_id*, *size*, *footer*, *options*)`
-
-With EasyAjax, you can completely configure the Bootstrap Modals using the following: `EasyAjax::modal(content, title, *form_id*, *size*, *footer*, *options*)`
+With EasyAjax, you can fire and configure a [Bootstrap Modal](https://getbootstrap.com/docs/3.4/javascript/#modals) using the following: <code>EasyAjax::modal(content, title, _form_id, size, footer, options_)</code>
 
 ```php
-public function actionBasicModal()
+public function actionModal()
 {
     Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
     
@@ -129,7 +133,7 @@ public function actionBasicModal()
 }
 ```
 
-It is also available a method to remotely close a Modal opened in the UI:
+It is also available a method to remotely close a Modal which is actually open in the UI:
 
 ```php
 public function actionCloseModal()
@@ -143,23 +147,22 @@ public function actionCloseModal()
 
 ```
 
- > You can edit the modal layout and many other settings. Please refer to the guide for all the available options.
+ > You can edit the modal layout and many other settings. Please refer to the [guide](docs/guide/modals.md) for all the available options.
 
 ---
-#### Notify
+
+####Notify
 
 Le EasyAjax Notify sono shortcuts per controllare il plugin Bootstrap Notify. Gli assets del plugin sono bundled con le EasyAjax anche se è possibile disabilitarne l'integrazione, nel caso la vostra applicazione l'abbia già integrato con plugin di terze parti.
 
-EasyAjax Notify allows to control the Bootstrap Notify plugin. The plugin assets are bundled within EasyAjax. 
+**EasyAjax Notify** allows to control the [Bootstrap Notify plugin](http://bootstrap-notify.remabledesigns.com/). The plugin assets (`bootstrap-notify.js` and `animate.js`) are bundled within EasyAjax. 
 
-> You can disable the asset inclusion if it is already bundled in your application
+> Tip: You can disable the asset inclusion if it is already bundled in your application
 
-To call a notify, you can use `\letsjump\easyAjax\EasyAjax::notify(message, *title*, *settings*)`.
-In the `settings` parameter, you can specify the type of notification  displayed (_info, success, warning or danger_).
+To fire a Notify, you can use <code>\letsjump\easyAjax\EasyAjax::notify(message, *title*, *settings*)</code>.
+In the `settings` parameter, you should specify the type of notification displayed (`Notify::TYPE_INFO` (blue), `Notify::TYPE_SUCCESS` (green), `Notify::TYPE_WARNING` (yellow) or `Notify::TYPE_DANGER` (red)).
 
-Per velocizzare la scrittura del codice sono anche disponibili alcuni metodi shortcut per le notifiche più comuni: `EasyAjax::notifyInfo(title)`, `EasyAjax::notifySuccess(title)`, `EasyAjax::notifyWarning(title)`, `EasyAjax::notifyDanger(title)`.
-
-To speed up your coding, I have created some shortcut methods for the most common notification types: `EasyAjax::notifyInfo(title)`, `EasyAjax::notifySuccess(title)`, `EasyAjax::notifyWarning(title)`, `EasyAjax::notifyDanger(title)`.
+To speed up your coding, I have also added some shortcut methods for the most common notification types: `EasyAjax::notifyInfo(message)`, `EasyAjax::notifySuccess(message)`, `EasyAjax::notifyWarning(message)`, `EasyAjax::notifyDanger(message)`.
 
 Example:
 
@@ -173,12 +176,14 @@ public function actionNotify()
 }
 ```
 
-> Refer to the guide for all the available options.
+> Note: Actually notify doesn't refer to the [Yii2 flash message session array](https://www.yiiframework.com/doc/api/2.0/yii-web-session#$flash-detail). Please open an issue if you think it is needed.
+>
+> Refer to the [guide](docs/guide/notify.md) for all the available options and template manipulation.
 
 ---
 #### Pjax Reload
 
-`EasyAjax::pjaxReload(['#myPjaxID0', '#myPjaxID1', ...])` method allows to reload one or more Pjax containers.
+The EasyAjax PjaxReload (`EasyAjax::pjaxReload(['#myPjaxID0', '#myPjaxID1', ...])`) method allows to reload one or more Pjax containers.
 
 ```php
 public function actionPjaxReload()
@@ -191,10 +196,12 @@ public function actionPjaxReload()
 }
 ```
 
+> Refer to the [guide](docs/guide/pjax-reload.md) for detailed informations.
+
 ---
 #### Form validation
 
-`EasyAjax::formValidation(['#my-form-id'=>ActiveForm::validate(MyModelClass)])` method allows to display the validation results for the specified form.
+The form validation (`EasyAjax::formValidation(['#my-form-id'=>ActiveForm::validate(MyModelClass)])`) method allows to display the validation results for the specified form. It will send the validation results for each form field specified by the `#form-id` attribute to [display its error messages](https://github.com/samdark/yii2-cookbook/blob/master/book/forms-activeform-js.md).
 
 ```php
 public function actionValidateForm()
@@ -207,6 +214,7 @@ public function actionValidateForm()
     ];
 }
 ``` 
+> Refer to the [guide](docs/guide/form-validation.md) for detailed informations.
 
 ---
 #### Ajax CRUD with Gii
@@ -215,9 +223,9 @@ The bundled Gii generator within EasyAjax allows you to instantly create the Aja
 
 ![Gii module](docs/images/gii.jpg)
 
-This will generate a CRUD schema which is identical to the original one, and an added `actionModal` into the controller code, and its relative `myViewFolder/_modal.php` view in charge of creating or updating the data in an Ajax way.
+This will generate a CRUD schema which is identical to the Yii2 original one, with an added `actionModal($id=null)` into the controller code, plus its relative <code>_myViewFolder_/_modal.php</code> view in charge of creating or updating the data in an Ajax modal.
 
-You can switch the Ajax CRUD by simply setting the 'modal' parameter of the integrated ActionColumn method: 
+You can switch the CRUD behavior to Ajax modal by simply setting the 'modal' parameter of the integrated ActionColumn method : 
 
 ```php
 // myViewFolder/index.php 
@@ -238,8 +246,8 @@ You can switch the Ajax CRUD by simply setting the 'modal' parameter of the inte
 ```
 
 > BONUS: Deleting a record doesn't imply a complete page refresh, therefore the GridView pagination will not be affected.
-
-Refer to the guide for all the available options
+> 
+> Refer to the [guide](docs/guide/gii.md) for all the available options.
 
 ---
 
@@ -247,10 +255,12 @@ Refer to the guide for all the available options
 
 Documentation in progress
 
+> Refer to the [guide](docs/guide/tabs.md) for all the available options.
+
 ---
 #### Content replace
  
- `ContentReplace` replaces the content of a specific Html tag with the code sent by the EasyAjax response. It uses the `jQuery.html()` standard function. 
+EasyAjax `ContentReplace(['#container1-id'=>'New content', '#container2-id'=>'New content', ...])` replaces the content of a specific Html tag with the code sent by the EasyAjax response. It uses the [`jQuery.html()` standard method](https://api.jquery.com/html/). 
  
 ```php
 public function actionContentReplace()
@@ -263,14 +273,12 @@ public function actionContentReplace()
 }
 ```
 
----
-#### Redirect
-
+> Refer to the [guide](docs/guide/content-replace.md) for detailed informations.
 
 ---
 #### Confirms
 
-You can use the confirm method to call a Javascript `confirm()` from a controller action. By clicking on the "OK" button it will fire an Ajax request to the action specified in the `url` parameter.
+You can use the EasyAjax `confirm('message', 'url')` method to fire a [Javascript Window confirm()](https://www.w3schools.com/jsref/met_win_confirm.asp) from a controller action. By clicking on the "OK" button it will fire an Ajax request to the action specified in the `url` parameter.
 ```php
 public function actionConfirm()
 {
@@ -281,7 +289,14 @@ public function actionConfirm()
     ];
 }
 ```
+
+> Refer to the [guide](docs/guide/confirm.md) for detailed informations.
+
 ## Contributing
+
+>Visto che da one-man-band mi sono trovato a lavorare su web app molto grosse, e Yii è stata da sempre la mia prima scelta, ho pensato di scrivere questi semplici metodi javascript che eliminino la ridondanza in alcune interazioni tra server e UI. Fatemi sapere la vostra opinione!
+
+
 
 ## Credits
 

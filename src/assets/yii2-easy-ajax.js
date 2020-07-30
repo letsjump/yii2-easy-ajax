@@ -270,6 +270,8 @@ window.yii.easyAjax = (function ($) {
          */
         yea_modal_close: function () {
             $("[data-dismiss=modal]").trigger({type: "click"});
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
         },
 
         /**
