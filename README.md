@@ -292,11 +292,16 @@ public function actionConfirm()
 
 > Refer to the [guide](docs/guide/confirm.md) for detailed informations.
 
+## Security
+See [SECURITY.md](SECURITY.md)
+
 ## Contributing
-See CONTRIBUTING.md
+See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Credits
 
 [Yiisoft](https://www.yiiframework.com/) for the best PHP framework for large-scale application (my opinion), [Twitter Bootstrap](https://getbootstrap.com/), and the [Bootstrap Notify plugin](http://bootstrap-notify.remabledesigns.com/). The Code of Conduct is adapted from the [Contributor Covenant](http://contributor-covenant.org)
 
 ## License
+
+See [LICENSE.md](LICENSE.md)
