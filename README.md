@@ -4,7 +4,7 @@ Relax your keyboard with Yii2 EasyAjax
 
 EasyAjax are a bunch of Yii methods that allows you to speed up your app coding minimizing the amount of code you need to write to interact with Bootstap UI and with Javascript in general.
 
-[Notifies](#Notify), [modals](#Modal), [tabs](#Tabs), [pjax-reloads](#Pjax-reload), [form validations](#Form-valitation) among others can now be set up and launched with only a line of code into the controller's action response.  
+[Notifies](#notify), [modals](#modal), [tabs](#tabs), [pjax-reloads](#pjax-reload), [form validations](#form-valitation) among others can now be set up and launched with only a line of code into the controller's action response.  
 
 For example,  `EasyAjax::modal('My modal content')` opens a modal with "My modal content" as _content_, while `EasyAjax::reloadPjax(['#p0'])` reloads the `pjax-container` identified by `id="p0"`
 
@@ -151,7 +151,7 @@ public function actionCloseModal()
 
 ---
 
-####Notify
+#### Notify
 
 Le EasyAjax Notify sono shortcuts per controllare il plugin Bootstrap Notify. Gli assets del plugin sono bundled con le EasyAjax anche se è possibile disabilitarne l'integrazione, nel caso la vostra applicazione l'abbia già integrato con plugin di terze parti.
 
@@ -199,7 +199,7 @@ public function actionPjaxReload()
 > Refer to the [guide](docs/guide/pjax-reload.md) for detailed informations.
 
 ---
-#### Form validation
+#### Form Validation
 
 The form validation (`EasyAjax::formValidation(['#my-form-id'=>ActiveForm::validate(MyModelClass)])`) method allows to display the validation results for the specified form. It will send the validation results for each form field specified by the `#form-id` attribute to [display its error messages](https://github.com/samdark/yii2-cookbook/blob/master/book/forms-activeform-js.md).
 
