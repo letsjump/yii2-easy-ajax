@@ -253,8 +253,60 @@ You can switch the CRUD behavior to Ajax modal by simply setting the 'modal' par
 
 #### Ajax Tabs
 
-Documentation in progress
+EasyAjax Tab (`EasyAjax::tab('tab-id', 'content to inject')`) is a simple and _very basic_ way to update the content of a [Bootstrap Tab](https://getbootstrap.com/docs/3.4/javascript/#tabs) with an ajax response from a controller.
 
+**View**
+
+In the \yii\bootstrap\Tabs widget for each _tab item_, you must:
+- Include a `linkOptions` parameter with a reference to the controller action Url and a `data-yea=1` parameter which will fire the request. 
+- Set the tab container ID (`'options'     => ['id' => 'yourTabID']`) for a stable reference to its content.
+
+```php
+<?= \yii\bootstrap\Tabs::widget([
+    'items' => [
+        [
+            'label'       => 'Rome',
+            'linkOptions' => [
+                'data-href' => \yii\helpers\Url::to(['site/tab', 'id' => 'rome',]),
+                'data-yea'  => 1
+            ],
+            'options'     => ['id' => 'rome'],
+        ],
+        // ... other tabs
+    ]
+]) ?>
+```
+
+**Controller**
+
+Just include the EasyAjax method `EasyAjax::tab(tab-id, content)` into the controller action response array:
+
+```php
+public function actionTab($id)
+{
+    $date = new \DateTimeImmutable('now');
+    
+    $content = [
+        'rome' => $date->setTimezone(new \DateTimeZone('Europe/Rome'))->format('l jS \of F h:i:s A'),
+        'london' => $date->setTimezone(new \DateTimeZone('Europe/London'))->format('l jS \of F h:i:s A'),
+        'new-york' => $date->setTimezone(new \DateTimeZone('America/New_York'))->format('l jS \of F h:i:s A'),
+        'calcutta' => $date->setTimezone(new \DateTimeZone('Asia/Calcutta'))->format('l jS \of F h:i:s A'),
+    ];
+    
+    if ( ! array_key_exists($id, $content)) {
+        throw new \yii\web\BadRequestHttpException('Your request is invalid');
+    }
+    
+    Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    
+    return [
+        \letsjump\easyAjax\EasyAjax::tab($id, '<p>' . $content[$id] . '</p>')
+    ];
+}
+```
+
+> Warning: tab-id must be specified without the hashtag (#).
+>
 > Refer to the [guide](docs/guide/tabs.md) for all the available options.
 
 ---
