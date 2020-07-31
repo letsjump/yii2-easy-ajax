@@ -153,8 +153,6 @@ public function actionCloseModal()
 
 #### Notify
 
-Le EasyAjax Notify sono shortcuts per controllare il plugin Bootstrap Notify. Gli assets del plugin sono bundled con le EasyAjax anche se è possibile disabilitarne l'integrazione, nel caso la vostra applicazione l'abbia già integrato con plugin di terze parti.
-
 **EasyAjax Notify** allows to control the [Bootstrap Notify plugin](http://bootstrap-notify.remabledesigns.com/). The plugin assets (`bootstrap-notify.js` and `animate.js`) are bundled within EasyAjax. 
 
 > Tip: You can disable the asset inclusion if it is already bundled in your application
