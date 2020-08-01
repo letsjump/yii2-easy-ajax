@@ -2,7 +2,7 @@
 
 Relax your keyboard with Yii2 EasyAjax
 
-EasyAjax are a bunch of Yii methods that allows you to speed up your app coding minimizing the amount of code you need to write to interact with Bootstap UI and with Javascript in general.
+EasyAjax are a bunch of Yii methods that minimize the amount of code you need to write to interact with Bootstap UI and with Javascript in general.
 
 [Notifies](#notify), [modals](#modals), [tabs](#ajax-tabs), [pjax-reloads](#pjax-reload), [form validations](#form-validation) among others can now be set up and launched with only a line of code into the controller's action response.  
 
