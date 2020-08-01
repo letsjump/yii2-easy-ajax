@@ -2,7 +2,7 @@
     "name": "letsjump/yii2-easy-ajax",
     "description": "EasyAjax are a bunch of Yii methods that minimize the amount of code you need to write to interact with Ajax CRUD, notifies, modals, tabs, pjax-reloads, form validations among others...",
     "type": "yii2-extension",
-    "keywords": ['yii2', ,'user interface', 'bootstrap', 'notify', 'modal', 'ajax CRUD', 'gii', 'tabs'],
+    "keywords": ["yii2", ,"user interface", "bootstrap", "notify", "modal", "ajax CRUD", "gii", "tabs"],
     "readme": "README.md",
     "license": "MIT",
     "authors": [
