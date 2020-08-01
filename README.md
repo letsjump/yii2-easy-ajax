@@ -350,7 +350,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Credits
 
-[Yiisoft](https://www.yiiframework.com/) for the best PHP framework for large-scale application (my opinion), [Twitter Bootstrap](https://getbootstrap.com/), and the [Bootstrap Notify plugin](http://bootstrap-notify.remabledesigns.com/). The Code of Conduct is adapted from the [Contributor Covenant](http://contributor-covenant.org)
+[Yiisoft](https://www.yiiframework.com/) for the best PHP framework for large-scale application (my own opinion), [Twitter Bootstrap](https://getbootstrap.com/), and the [Bootstrap Notify plugin](http://bootstrap-notify.remabledesigns.com/). The Code of Conduct is adapted from the [Contributor Covenant](http://contributor-covenant.org)
 
 ## License
 
