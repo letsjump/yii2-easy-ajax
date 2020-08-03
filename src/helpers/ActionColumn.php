@@ -89,13 +89,13 @@ class ActionColumn extends \yii\grid\ActionColumn
     protected function initAdditionalOptions($button)
     {
         if (empty($this->_mergedOptions)) {
-            $this->_mergedOptions = ArrayHelper::merge($this->getDefaultOptions(), $this->buttonOptions);
+            $this->_mergedOptions = ArrayHelper::merge($this->getConfiguration(), $this->buttonOptions);
         }
         
         return $this->_mergedOptions[$button];
     }
     
-    protected function getDefaultOptions()
+    protected function getConfiguration()
     {
         if (empty($this->_defaultOptions)) {
             $title                 = [
