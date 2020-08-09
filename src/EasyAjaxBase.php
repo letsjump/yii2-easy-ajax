@@ -1,11 +1,11 @@
 <?php
-/**
+/*
  *
  *  * @package   yii2-easy-ajax
  *  * @author    Gianpaolo Scrigna <letsjump@gmail.com>
  *  * @link https://github.com/letsjump/yii2-easy-ajax
  *  * @copyright Copyright &copy; Gianpaolo Scrigna, beintech.it, 2017-2020
- *  * @version   1.0.0
+ *  * @version   1.0.1
  *
  */
 
@@ -15,17 +15,16 @@ use Yii;
 use yii\base\Component;
 use yii\helpers\ArrayHelper;
 use yii\web\View;
-use letsjump\easyAjax\helpers\Modal;
 use letsjump\easyAjax\web\EasyAjaxAsset;
 use letsjump\easyAjax\web\NotifyAsset;
 
+/**
+ *
+ * @property \yii\base\View|\yii\web\View $view
+ * @property-read array $configuration
+ */
 class EasyAjaxBase extends Component
 {
-    /**
-     * @var bool $registerAssets
-     * This should be always true, so the required assets are loaded within the page
-     */
-    public $registerAssets = true;
     
     /**
      * @var bool $publishNotifyAsset
@@ -77,7 +76,7 @@ class EasyAjaxBase extends Component
      * @var array $customOptions
      * Per application custom configuration
      */
-    public $customOptions = [];
+    public $customOptions;
     
     /**
      * @var array $options
@@ -89,51 +88,77 @@ class EasyAjaxBase extends Component
      * @var array $configuration
      * Merged $*option configuration
      */
-    protected $configuration = [];
+//    protected $configuration = [];
+    
+    private $_configuration;
     
     /**
-     * @var \yii\web\View $view
-     * App view object shortcut variable
+     * @var View the view object that can be used to render views or view files.
      */
-    protected $view;
+    private $_view;
     
     /**
      * Component initialization
      */
     public function init()
     {
-        $this->view = Yii::$app->view;
-        $this->configuration = $this->getConfiguration();
-        
-        if ($this->registerAssets === true) {
-            
-            $this->view->registerJsVar('yea_options', $this->configuration, View::POS_HEAD);
-            
-            // registering assets
-            if ( ! Yii::$app->request->isAjax) {
-                EasyAjaxAsset::register($this->view);
-                
-                if ($this->publishNotifyAsset === true) {
-                    NotifyAsset::register($this->view);
-                }
-            }
+        parent::init();
+        if($this->customOptions === null && Yii::$app->components['easyAjax']['customOptions'] !== false) {
+            $this->customOptions = Yii::$app->components['easyAjax']['customOptions'];
         }
-        
+    }
+    
+    public function inject()
+    {
+        $this->getView()->registerJsVar('yea_options', $this->getConfiguration(), View::POS_HEAD);
+        EasyAjaxAsset::register($this->getView());
+        if ($this->publishNotifyAsset === true) {
+            NotifyAsset::register($this->getView());
+        }
         if ($this->renderModal === true) {
-            $this->view->on(View::EVENT_END_BODY, function () {
-                echo (new Modal())->render();
+            $this->getView()->on(View::EVENT_END_BODY, function () {
+                echo $this->getView()->render(
+                    $this->getConfiguration()['viewPath'] . DIRECTORY_SEPARATOR . $this->getConfiguration()['modal']['viewFile'],
+                    ['component' => $this]
+                );
             });
         }
-        
-        parent::init();
     }
     
     /**
-     * @return array final component configuration
+     * Returns the view object that can be used to render views or view files.
+     * The [[render()]], [[renderPartial()]] and [[renderFile()]] methods will use
+     * this view object to implement the actual view rendering.
+     * If not set, it will default to the "view" application component.
+     * @return \yii\base\View|\yii\web\View the view object that can be used to render views or view files.
+     */
+    public function getView()
+    {
+        if ($this->_view === null) {
+            $this->_view = Yii::$app->getView();
+        }
+        
+        return $this->_view;
+    }
+    
+    /**
+     * Sets the view object to be used by this controller.
+     * @param View|\yii\web\View $view the view object that can be used to render views or view files.
+     */
+    public function setView($view)
+    {
+        $this->_view = $view;
+    }
+    
+    /**
+     * @return array component configuration
      */
     public function getConfiguration()
     {
-        return ArrayHelper::merge($this->baseOptions, $this->customOptions, $this->options);
+        if(empty($this->_configuration)) {
+            $this->_configuration = ArrayHelper::merge($this->baseOptions, $this->customOptions, $this->options);
+        }
+        return $this->_configuration;
     }
     
 }

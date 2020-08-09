@@ -1,11 +1,11 @@
 <?php
-/**
+/*
  *
  *  * @package   yii2-easy-ajax
  *  * @author    Gianpaolo Scrigna <letsjump@gmail.com>
  *  * @link https://github.com/letsjump/yii2-easy-ajax
  *  * @copyright Copyright &copy; Gianpaolo Scrigna, beintech.it, 2017-2020
- *  * @version   1.0.0
+ *  * @version   1.0.1
  *
  */
 
@@ -85,15 +85,15 @@ class Notify extends EasyAjaxBase
             $options['target'] = $this->target;
         }
         if ( ! isset($this->defaultOptions['notify']['clientSettings']['template'])) {
-            $this->configuration['notify']['clientSettings']['template'] = $this->view->render($this->configuration['viewPath']
+            $this->getConfiguration()['notify']['clientSettings']['template'] = $this->getView()->render($this->getConfiguration()['viewPath']
                                                                                           . DIRECTORY_SEPARATOR
-                                                                                          . $this->configuration['notify']['viewFile']);
+                                                                                          . $this->getConfiguration()['notify']['viewFile']);
         }
         
         return [
             'options'  => $options,
             'settings' => ArrayHelper::merge(
-                $this->configuration['notify']['clientSettings'],
+                $this->getConfiguration()['notify']['clientSettings'],
                 $this->settings
             )
         ];

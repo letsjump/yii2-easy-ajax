@@ -20,9 +20,12 @@ The preferred way to install this extension is through [composer](http://getcomp
 
 Either run
 
+
 ```composer require --prefer-dist letsjump/yii2-easy-ajax```
 
+
 or add
+
 
 ```"letsjump/yii2-easy-ajax": "~1.0.0"```
 

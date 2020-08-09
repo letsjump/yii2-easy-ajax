@@ -1,17 +1,11 @@
 <?php
-/**
- * Modal renders a modal window that can be toggled by clicking on a button.
- * This class il also able to insert a modal html template into the application layout
- *
- * You can fire a modal in the EasyAjax way by
- *
- *
+/*
  *
  *  * @package   yii2-easy-ajax
  *  * @author    Gianpaolo Scrigna <letsjump@gmail.com>
  *  * @link https://github.com/letsjump/yii2-easy-ajax
  *  * @copyright Copyright &copy; Gianpaolo Scrigna, beintech.it, 2017-2020
- *  * @version   1.0.0
+ *  * @version   1.0.1
  *
  */
 
@@ -51,25 +45,14 @@ class Modal extends EasyAjaxBase
         }
         
         if ($footerView !== null) {
-            return $this->view->render(
-                $this->configuration['viewPath'] . DIRECTORY_SEPARATOR . $footerView
+            return $this->getView()->render(
+                $this->getConfiguration()['viewPath'] . DIRECTORY_SEPARATOR . $footerView
             );
         }
         
-        return $this->view->render(
-            $this->configuration['viewPath'] . DIRECTORY_SEPARATOR . $this->configuration['modal']['defaultViewFooter'],
+        return $this->getView()->render(
+            $this->getConfiguration()['viewPath'] . DIRECTORY_SEPARATOR . $this->getConfiguration()['modal']['defaultViewFooter'],
             ['formId' => $formId]
-        );
-    }
-    
-    /**
-     * Insert the default modal html code into the application layout
-     */
-    public function render()
-    {
-        return $this->view->render(
-            $this->configuration['viewPath'] . DIRECTORY_SEPARATOR . $this->configuration['modal']['viewFile'],
-            ['widget' => $this]
         );
     }
     
@@ -83,7 +66,7 @@ class Modal extends EasyAjaxBase
             'content' => $this->content,
             'footer'  => $this->getFooter($this->formId, $this->footerView),
             'size'    => empty($this->size) ? self::SIZE_DEFAULT : $this->size,
-            'options' => $this->configuration,
+            'options' => $this->getConfiguration(),
         ];
     }
     

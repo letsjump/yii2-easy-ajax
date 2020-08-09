@@ -1,11 +1,11 @@
 <?php
-/**
+/*
  *
  *  * @package   yii2-easy-ajax
  *  * @author    Gianpaolo Scrigna <letsjump@gmail.com>
  *  * @link https://github.com/letsjump/yii2-easy-ajax
  *  * @copyright Copyright &copy; Gianpaolo Scrigna, beintech.it, 2017-2020
- *  * @version   1.0.0
+ *  * @version   1.0.1
  *
  */
 
@@ -18,7 +18,7 @@
 
 namespace letsjump\easyAjax\helpers;
 
-use letsjump\easyAjax\EasyAjax;
+use letsjump\easyAjax\EasyAjaxBase;
 use yii\helpers\Html;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -49,7 +49,7 @@ class ActionColumn extends \yii\grid\ActionColumn
         parent::init();
         $this->initDefaultButtons();
         $this->headerWidth();
-        $this->yea_options = (new EasyAjax())->getConfiguration();
+        $this->yea_options = (new EasyAjaxBase())->getConfiguration();
     }
     
     /**

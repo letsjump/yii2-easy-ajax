@@ -1,11 +1,11 @@
 <?php
-/**
+/*
  *
  *  * @package   yii2-easy-ajax
  *  * @author    Gianpaolo Scrigna <letsjump@gmail.com>
  *  * @link https://github.com/letsjump/yii2-easy-ajax
  *  * @copyright Copyright &copy; Gianpaolo Scrigna, beintech.it, 2017-2020
- *  * @version   1.0.0
+ *  * @version   1.0.1
  *
  */
 namespace letsjump\easyAjax;
@@ -159,7 +159,7 @@ class EasyAjax extends EasyAjaxBase
         $notify->message  = $message;
         $notify->title    = $title;
         $notify->settings = $settings;
-        $notify->icon     = $notify->configuration['notify']['iconSuccess'];
+        $notify->icon     = $notify->getConfiguration()['notify']['iconSuccess'];
         
         return ['yea_notify' => $notify->generate()];
     }
@@ -180,7 +180,7 @@ class EasyAjax extends EasyAjaxBase
         $notify->message  = $message;
         $notify->title    = $title;
         $notify->settings = $settings;
-        $notify->icon     = $notify->configuration['notify']['iconInfo'];
+        $notify->icon     = $notify->getConfiguration()['notify']['iconInfo'];
         
         return ['yea_notify' => $notify->generate()];
     }
@@ -201,7 +201,7 @@ class EasyAjax extends EasyAjaxBase
         $notify->message  = $message;
         $notify->title    = $title;
         $notify->settings = $settings;
-        $notify->icon     = $notify->configuration['notify']['iconWarning'];
+        $notify->icon     = $notify->getConfiguration()['notify']['iconWarning'];
         
         return ['yea_notify' => $notify->generate()];
     }
@@ -222,7 +222,7 @@ class EasyAjax extends EasyAjaxBase
         $notify->message  = $message;
         $notify->title    = $title;
         $notify->settings = $settings;
-        $notify->icon     = $notify->configuration['notify']['iconDanger'];
+        $notify->icon     = $notify->getConfiguration()['notify']['iconDanger'];
         
         return ['yea_notify' => $notify->generate()];
     }
