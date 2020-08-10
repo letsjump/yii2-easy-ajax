@@ -9,7 +9,7 @@
  *
  */
 
-use letsjump\easyAjax\EasyAjax;
+use letsjump\easyAjax\EasyAjaxBase;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 
@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 
     <p>
-        <?= "<?= " ?>Html::a(<?= $generator->generateString('Create ' . Inflector::camel2words(StringHelper::basename($generator->modelClass))) ?>, ['<?= $generator->enableEasyAjax ? 'modal' : 'create' ?>'], ['class' => 'btn btn-success', '<?= (new EasyAjax(['registerAssets'=>false]))->getConfiguration()['trigger'] ?>'=><?= $generator->enableEasyAjax ? 1 : 0 ?>]) ?>
+        <?= "<?= " ?>Html::a(<?= $generator->generateString('Create ' . Inflector::camel2words(StringHelper::basename($generator->modelClass))) ?>, ['<?= $generator->enableEasyAjax ? 'modal' : 'create' ?>'], ['class' => 'btn btn-success', '<?= (new EasyAjaxBase())->getConfiguration()['trigger'] ?>'=><?= $generator->enableEasyAjax ? 1 : 0 ?>]) ?>
     </p>
 
 <?= $generator->enablePjax ? "    <?php Pjax::begin(['id'=> '" . Inflector::camel2id(StringHelper::basename($generator->modelClass)) . "-yea-pjax']); ?>\n" : '' ?>

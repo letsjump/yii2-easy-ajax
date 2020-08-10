@@ -1,4 +1,6 @@
 ### CHANGE LOG
+**v1.0.2**
+- BUG: Removed unused `$registerAsset` from Gii generator
 
 **v1.0.1**
 - BUG: customConfiguration won't overwrite the configuration array (temporary workaround)

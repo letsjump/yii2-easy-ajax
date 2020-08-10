@@ -9,7 +9,7 @@
  *
  */
 
-use letsjump\easyAjax\EasyAjax;
+use letsjump\easyAjax\EasyAjaxBase;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 
@@ -37,10 +37,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 
     <p>
-        <?= "<?= " ?>Html::a(<?= $generator->generateString('Update') ?>, ['<?= $generator->enableEasyAjax ? 'modal' : 'update' ?>', <?= $urlParams ?>], ['class' => 'btn btn-primary', '<?= (new EasyAjax(['registerAssets'=>false]))->getConfiguration()['trigger'] ?>'=><?= $generator->enableEasyAjax ? 1 : 0 ?>]) ?>
+        <?= "<?= " ?>Html::a(<?= $generator->generateString('Update') ?>, ['<?= $generator->enableEasyAjax ? 'modal' : 'update' ?>', <?= $urlParams ?>], ['class' => 'btn btn-primary', '<?= (new EasyAjaxBase())->getConfiguration()['trigger'] ?>'=><?= $generator->enableEasyAjax ? 1 : 0 ?>]) ?>
         <?= "<?= " ?>Html::a(<?= $generator->generateString('Delete') ?>, ['delete', <?= $urlParams ?>], [
             'class' => 'btn btn-danger',
-            '<?= (new EasyAjax(['registerAssets'=>false]))->getConfiguration()['trigger'] ?>'=><?= $generator->enableEasyAjax ? 1 : 0 ?>,
+            '<?= (new EasyAjaxBase())->getConfiguration()['trigger'] ?>'=><?= $generator->enableEasyAjax ? 1 : 0 ?>,
             'data' => [
                 'data-pjax' => 0,
                 '<?= $generator->enableEasyAjax ? 'yea-confirm' : 'confirm' ?>'  => <?= $generator->generateString('Are you sure you want to delete this item?') ?>,
