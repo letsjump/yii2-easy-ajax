@@ -45,9 +45,7 @@ class Modal extends EasyAjaxBase
         }
         
         if ($footerView !== null) {
-            return $this->getView()->render(
-                $this->getConfiguration()['viewPath'] . DIRECTORY_SEPARATOR . $footerView
-            );
+            return $footerView;
         }
         
         return $this->getView()->render(

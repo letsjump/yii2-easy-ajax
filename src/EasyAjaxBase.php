@@ -69,7 +69,7 @@ class EasyAjaxBase extends Component
                 // http://bootstrap-notify.remabledesigns.com/
             ]
         ],
-        'yea_extends' => []
+        'extends' => []
     ];
     
     /**

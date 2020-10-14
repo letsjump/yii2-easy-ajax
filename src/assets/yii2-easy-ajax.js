@@ -359,7 +359,7 @@ jQuery(document).ready(function () {
 
     // https://stackoverflow.com/questions/28322636/synchronous-xmlhttprequest-warning-and-script
 
-    yii.easyAjax.init(yea_options.yea_extends);
+    yii.easyAjax.init(yea_options.extends);
 
     jQuery(document)
         .on("click", "[" + yea_options.trigger + "='1']", function (e) {
