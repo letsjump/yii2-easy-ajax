@@ -203,7 +203,7 @@ window.yii.easyAjax = (function ($) {
                 jQuery.each(params, function (index, container) {
                     if (index + 1 < params.length) {
                         jQuery(container.container).one("pjax:end", function (xhr, options) {
-                            jQuery.pjax.reload(params.yea_pjax_reload[index + 1]);
+                            jQuery.pjax.reload(params[index + 1]);
                         });
                     }
                 });
