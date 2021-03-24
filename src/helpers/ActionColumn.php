@@ -65,8 +65,8 @@ class ActionColumn extends \yii\grid\ActionColumn
     /**
      * Initializes the default button rendering callback for single button
      *
-     * @param string $name             Button name as it's written in template
-     * @param null $iconName
+     * @param string $name             Button name
+     * @param string|null $iconName
      * @param array $additionalOptions Array of additional options
      *
      * @since 2.0.11

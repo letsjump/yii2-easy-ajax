@@ -8,6 +8,7 @@
  *  * @version   1.0.1
  *
  */
+
 namespace letsjump\easyAjax;
 
 use letsjump\easyAjax\helpers\Modal;
@@ -29,7 +30,7 @@ class EasyAjax extends EasyAjaxBase
     }
     
     /**
-     * @param string $url location href
+     * @param string $url           location href
      * @param bool $processResponse true if the jQuery.get() response has to be fired by easyAjax
      *
      * @return array
@@ -51,7 +52,7 @@ class EasyAjax extends EasyAjaxBase
     
     /**
      * @param array $array #tagID => content for each tag to replace:
-     * [['#tagID'=>'content to be replaced with'], ['#tagID'=>'content to be replaced with'], ...]
+     *                     [['#tagID'=>'content to be replaced with'], ['#tagID'=>'content to be replaced with'], ...]
      *
      * @return array
      */
@@ -62,7 +63,8 @@ class EasyAjax extends EasyAjaxBase
     
     /**
      * @param $array array #PjaxTagID => content for each pjax container to refresh:
-     * ['#pjaxContainerID', '#pjaxContainerID', ...]
+     *               ['#pjaxContainerID', '#pjaxContainerID', ...]
+     *
      * @todo check documentation description
      *
      * @return array
@@ -83,8 +85,8 @@ class EasyAjax extends EasyAjaxBase
     }
     
     /**
-     * @param $tab
-     * @param null $content
+     * @param string $tab
+     * @param string|null $content
      *
      * @return array
      */
@@ -94,12 +96,12 @@ class EasyAjax extends EasyAjaxBase
     }
     
     /**
-     * @param $title
-     * @param $content
-     * @param null $form_id
-     * @param null $size
+     * @param string|null $title
+     * @param string $content
+     * @param string|null $form_id
+     * @param string|null $size
      * @param array $options
-     * @param null $footer
+     * @param string|null $footer
      *
      * @return array
      */
@@ -108,19 +110,19 @@ class EasyAjax extends EasyAjaxBase
         $modal             = new Modal();
         $modal->title      = $title;
         $modal->content    = $content;
-        $modal->formId    = $form_id;
+        $modal->formId     = $form_id;
         $modal->size       = $size;
         $modal->options    = $options;
         $modal->footerView = $footer;
         
-         return ['yea_modal' => $modal->generate()];
+        return ['yea_modal' => $modal->generate()];
     }
     
     /**
      * @param $content
      * @param $title
-     * @param null $size
-     * @param null $footer
+     * @param string|null $size
+     * @param string|null $footer
      * @param array $options
      *
      * @return array
@@ -260,6 +262,10 @@ class EasyAjax extends EasyAjaxBase
         $notify->settings = $settings;
         
         return ['yea_notify' => $notify->generate()];
+    }
+    
+    public static function submit(){
+        return isset($_POST['yea-submit']);
     }
     
 }

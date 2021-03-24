@@ -319,7 +319,7 @@ requestor = function (element, modal_id) {
         method:  'get',
         data:    [],
         target:  null,
-        form_id: false
+        form_id: false,
     }
 
     var target_attribute = 'href';
@@ -350,6 +350,7 @@ requestor = function (element, modal_id) {
         }
         object.target = form.attr('action');
         object.data = form.serializeArray();
+        object.data.push({name: "yea-submit", value: true});
     }
 
     return object;
@@ -373,11 +374,11 @@ jQuery(document).ready(function () {
                 yii.easyAjax.request(this);
             }
         })
-    .keypress(function (e) {
-        if (e.which === 13 && ($("#" + yea_options.modal.id).data("bs.modal") || {}).isShown && !$("textarea").is(":focus")) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            $(".modalform-submit").click();
-        }
-    })
+        .keypress(function (e) {
+            if (e.which === 13 && ($("#" + yea_options.modal.id).data("bs.modal") || {}).isShown && !$("textarea").is(":focus")) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                $(".modalform-submit").click();
+            }
+        })
 });

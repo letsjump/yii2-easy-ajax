@@ -1,4 +1,15 @@
 ### CHANGE LOG
+
+**v1.0.5**
+- BUG: actionModal() creates new records during validation if form parameter `enableAjaxValidation` is true. Added new method `EasyAjax::submit()` that checks if form submit button is clicked
+ 
+**v1.0.4**
+- BUG: yea_pjax_reload won't reload more than one pjax container at once
+
+**v1.0.3**
+- BUG: The EasyAjax::modal() $footer parameter erroneously accepted a view path
+- BUG: The JS extends method was erroneously named with the yea_ prefix
+
 **v1.0.2**
 - BUG: Removed unused `$registerAsset` from Gii generator
 

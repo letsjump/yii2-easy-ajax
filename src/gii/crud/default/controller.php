@@ -171,7 +171,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         Yii::$app->response->format = Response::FORMAT_JSON;
         $model = (int)$id > 0 ? $this->findModel($id) : new <?= $modelClass ?>();
         if ($model->load(Yii::$app->request->post())) {
-            if ($model->save()) {
+            if (EasyAjax::submit() && $model->save()) {
                 return [
                     EasyAjax::modalClose(),
                     EasyAjax::reloadPjax(['#<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-yea-pjax']),

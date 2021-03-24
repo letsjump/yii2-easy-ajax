@@ -215,7 +215,7 @@ class Generator extends \yii\gii\Generator
     }
 
     /**
-     * @return string the controller view path
+     * @return bool|string the controller view path
      */
     public function getViewPath()
     {
