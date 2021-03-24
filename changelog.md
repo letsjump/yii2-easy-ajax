@@ -1,7 +1,10 @@
 ### CHANGE LOG
 
-**v1.0.5**
+**v1.0.6**
 - BUG: actionModal() creates new records during validation if form parameter `enableAjaxValidation` is true. Added new method `EasyAjax::submit()` that checks if form submit button is clicked
+
+**v1.0.5**
+- Added reference to asset-packagist repo to composer.json
  
 **v1.0.4**
 - BUG: yea_pjax_reload won't reload more than one pjax container at once
