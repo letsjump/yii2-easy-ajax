@@ -4,11 +4,12 @@
     "type": "yii2-extension",
     "keywords": [
         "yii2",
+        "extension",
         "user interface",
         "bootstrap",
         "notify",
         "modal",
-        "ajax CRUD",
+        "ajax",
         "gii",
         "tabs"
     ],
