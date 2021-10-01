@@ -1,6 +1,6 @@
 # yii2-easy-ajax
 
-Relax your keyboard with Yii2 EasyAjax
+Relax your keyboard with [Yii2 EasyAjax](https://yii.beintech.it/)
 
 EasyAjax are a bunch of Yii methods that minimize the amount of code you need to write to interact with Bootstap UI and with Javascript in general.
 
